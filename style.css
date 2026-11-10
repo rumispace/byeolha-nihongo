@@ -16,6 +16,31 @@
   --no-bg: #FFE3E1;
   --sel: #E4EEFF;
   --sel-line: #5B8DEF;
+  --soft: #EFEADF; --dis: #E5E0D6; --dis-d: #D2CCBF; --dis-t: #A9A396;
+  --hero-bg: #FFFFFF; --hero-ink: var(--ink);
+}
+/* ───────── 디자인 시안 ─────────
+ * 설정에서 고른 시안이 <html data-theme="..."> 로 들어온다. 확정되면 그 값을 :root 로 옮기고 나머지는 지운다. */
+[data-theme="indigo"] {
+  --bg: #EEF2FB; --ink: #1A2250; --sub: #7682A8; --line: #D9E0F2;
+  --main: #4257E8; --main-d: #2F3FBD;
+  --soft: #E6EBF7; --dis: #DFE4F1; --dis-d: #C7CFE4; --dis-t: #9AA4C2;
+  --sel: #FFF1DD; --sel-line: #FF9F1C;
+  --hero-bg: #4257E8; --hero-ink: #FFFFFF;
+}
+[data-theme="mint"] {
+  --bg: #E9F7F1; --ink: #0E3A32; --sub: #5F8279; --line: #CBE6DB;
+  --main: #10B981; --main-d: #0A8F63;
+  --soft: #DDF0E8; --dis: #D7E9E1; --dis-d: #BDD6CB; --dis-t: #8FAAA0;
+  --sel: #E4EEFF; --sel-line: #5B8DEF;
+  --hero-bg: #0E3A32; --hero-ink: #FFFFFF;
+}
+[data-theme="white"] {
+  --bg: #FFFFFF; --ink: #15171C; --sub: #6B7280; --line: #E3E5EA;
+  --main: #F2542D; --main-d: #C63D1B;
+  --soft: #F1F2F5; --dis: #ECEEF1; --dis-d: #D5D8DE; --dis-t: #A1A6B0;
+  --sel: #EAF1FF; --sel-line: #3B82F6;
+  --hero-bg: #15171C; --hero-ink: #FFFFFF;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; height: 100%; background: var(--bg); }
@@ -41,7 +66,7 @@ small { display: block; font-size: .78em; color: var(--sub); font-weight: 500; }
 }
 .btn small { color: rgba(255, 255, 255, .85); font-weight: 600; margin-top: 2px; }
 .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--main-d); }
-.btn:disabled { background: #E5E0D6; color: #A9A396; box-shadow: 0 4px 0 #D2CCBF; cursor: default; }
+.btn:disabled { background: var(--dis); color: var(--dis-t); box-shadow: 0 4px 0 var(--dis-d); cursor: default; }
 .btn.ok { background: var(--ok); box-shadow: 0 4px 0 var(--ok-d); }
 .btn.no { background: var(--no); box-shadow: 0 4px 0 var(--no-d); }
 .btn.ghost { background: #fff; color: var(--ink); box-shadow: 0 4px 0 var(--line); border: 2px solid var(--line); }
@@ -101,7 +126,7 @@ small { display: block; font-size: .78em; color: var(--sub); font-weight: 500; }
 .node.cur .ball { background: var(--main); border-color: var(--main-d); box-shadow: 0 5px 0 var(--main-d); color: #fff; animation: bob 1.6s ease-in-out infinite; }
 .node.done .ball { background: var(--gold); border-color: var(--gold-d); box-shadow: 0 5px 0 var(--gold-d); color: #7A5200; }
 .node.lock { opacity: .55; cursor: default; }
-.node.lock .ball { background: #EFEADF; font-size: 20px; }
+.node.lock .ball { background: var(--soft); font-size: 20px; }
 .node:not(.lock):active .ball { transform: translateY(4px); box-shadow: 0 1px 0 var(--line); }
 .txt b { display: block; font-size: 16px; }
 .soon { text-align: center; color: var(--sub); font-size: 13px; margin-top: 20px; }
@@ -133,7 +158,7 @@ small { display: block; font-size: .78em; color: var(--sub); font-weight: 500; }
 .srow { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; gap: 12px; }
 .srow + .srow { border-top: 2px solid var(--line); }
 .srow input { position: absolute; opacity: 0; }
-.sw { flex: none; width: 50px; height: 30px; border-radius: 15px; background: #D9D3C6; position: relative; transition: background .15s; }
+.sw { flex: none; width: 50px; height: 30px; border-radius: 15px; background: var(--dis-d); position: relative; transition: background .15s; }
 .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; transition: left .15s; }
 .srow input:checked + .sw { background: var(--ok); }
 .srow input:checked + .sw::after { left: 23px; }
@@ -142,7 +167,7 @@ small { display: block; font-size: .78em; color: var(--sub); font-weight: 500; }
 .lesson { display: flex; flex-direction: column; height: 100%; }
 .lbar { display: flex; align-items: center; gap: 12px; padding: calc(12px + env(safe-area-inset-top)) 16px 8px; }
 .x { font-size: 22px; color: var(--sub); width: 32px; height: 32px; }
-.prog { flex: 1; height: 14px; background: #EAE3D3; border-radius: 7px; overflow: hidden; }
+.prog { flex: 1; height: 14px; background: var(--line); border-radius: 7px; overflow: hidden; }
 .prog i { display: block; height: 100%; background: var(--ok); border-radius: 7px; transition: width .3s; min-width: 14px; }
 .lbody { flex: 1; overflow-y: auto; padding: 8px 16px 16px; display: flex; flex-direction: column; }
 .lfoot { padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); border-top: 2px solid var(--line); background: var(--bg); }
@@ -214,7 +239,7 @@ small { display: block; font-size: .78em; color: var(--sub); font-weight: 500; }
   box-shadow: 0 3px 0 var(--line); text-align: center; font-weight: 700;
 }
 .tile .jp { font-size: 20px; }
-.tile.used { background: #EFEADF; box-shadow: none; }
+.tile.used { background: var(--soft); box-shadow: none; }
 .tile.used > * { visibility: hidden; }
 
 .match { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 6px; }
@@ -274,3 +299,60 @@ small { display: block; font-size: .78em; color: var(--sub); font-weight: 500; }
 .card.intro.cust { border-style: dashed; }
 .tip.sales { background: #FFE6E2; font-weight: 700; }
 .brow.must { border-color: var(--gold-d); background: #FFFBEB; }
+
+/* 시안 공통: 머리 카드를 색으로 채우고 버튼은 금색으로 */
+.hero { background: var(--hero-bg); color: var(--hero-ink); }
+[data-theme]:not([data-theme="ivory"]) .hero { border-color: transparent; }
+[data-theme]:not([data-theme="ivory"]) .hero .btn { background: var(--gold); color: #5A3D00; box-shadow: 0 4px 0 var(--gold-d); }
+[data-theme]:not([data-theme="ivory"]) .hero .btn small { color: #7A5200; }
+[data-theme]:not([data-theme="ivory"]) .hero .link { color: #FFFFFF; }
+[data-theme="white"] .page, [data-theme="white"] .lbody { background: #F6F7F9; }
+[data-theme="white"] .lfoot { background: #FFFFFF; }
+
+/* ───────── 큼직하게 ─────────
+ * 배우는 사람이 한눈에 읽도록 글자와 누르는 곳을 키운다 */
+body { font-size: 17px; }
+.brand { font-size: 21px; }
+.chip { font-size: 16px; padding: 5px 12px; }
+.btn { font-size: 19px; padding: 16px 16px; }
+.say-box p { font-size: 18px; }
+.seg button { font-size: 18px; padding: 12px 8px; }
+.unit { font-size: 16px; }
+.ball { width: 72px; height: 72px; font-size: 28px; }
+.txt b { font-size: 19px; }
+.txt small { font-size: 14px; }
+.nav button { font-size: 13px; padding: 6px 0; }
+.nav button i { font-size: 26px; }
+.qlabel { font-size: 23px; }
+.lg { font-size: 34px; }
+.pron { font-size: 24px; }
+.card.intro .mean { font-size: 20px; }
+.furi { font-size: 17px; }
+.tip { font-size: 16px; }
+.prompt-ko { font-size: 25px; }
+.sit { font-size: 19px; }
+.bubble .jp { font-size: 23px; }
+.opt { font-size: 20px; padding: 15px 16px; }
+.opt .jp { font-size: 1.15em; }
+.opt small { font-size: 15px; }
+.tile { padding: 10px 14px; }
+.tile .jp { font-size: 24px; }
+.tile small { font-size: 14px; }
+.mt { font-size: 21px; min-height: 66px; }
+.mt.jp { font-size: 32px; }
+.mt.jp.long { font-size: 22px; }
+.brow .jp { font-size: 23px; }
+.brow small { font-size: 15px; }
+.fb strong { font-size: 20px; }
+.fb-ans { font-size: 17px; }
+.ribbon { font-size: 15px; }
+.x { font-size: 26px; width: 40px; height: 40px; }
+.prog { height: 16px; }
+.minispk { font-size: 16px; }
+
+/* 시안 고르기 */
+.themes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.themes button { border: 3px solid var(--line); border-radius: 16px; padding: 10px; text-align: left; font-weight: 800; background: var(--card); }
+.themes button.on { border-color: var(--main); }
+.themes .sw3 { display: flex; height: 34px; border-radius: 10px; overflow: hidden; margin-bottom: 8px; border: 1px solid rgba(0,0,0,.08); }
+.themes .sw3 i { flex: 1; }

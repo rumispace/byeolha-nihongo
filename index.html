@@ -12,6 +12,14 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
 <link rel="stylesheet" href="style.css">
+<script>
+  /* 디자인 시안: 주소의 ?theme= 또는 설정에서 고른 값 */
+  (function () {
+    var t = null;
+    try { t = new URLSearchParams(location.search).get('theme') || localStorage.getItem('bn_theme'); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t || 'ivory');
+  })();
+</script>
 </head>
 <body>
 <div id="app"></div>
