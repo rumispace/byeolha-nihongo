@@ -623,6 +623,11 @@ function viewLearn(el) {
         ${rec && canPractice() ? `<button class="link" id="prac">🎯 오늘의 연습도 하기</button>` : ''}
       </div>
     </section>
+    <button class="shopcard" id="shopgo">
+      <span class="si">🏪</span>
+      <span class="st"><b>약국 영업</b><small>3D 약국에서 손님을 일본어로 응대해요</small></span>
+      <span class="sgo">▶</span>
+    </button>
     <div class="seg">
       ${Object.keys(TRACKS).map(k => `<button class="${S.track === k ? 'on' : ''}" data-track="${k}">${TRACKS[k].name}<small>${TRACKS[k].desc}</small></button>`).join('')}
     </div>
@@ -640,6 +645,7 @@ function viewLearn(el) {
       <p class="soon">다음 단원은 준비 중이에요.</p>
     </div>`;
   if (rec) document.getElementById('rec').onclick = () => startLesson(rec);
+  document.getElementById('shopgo').onclick = () => startShop();
   const prac = document.getElementById('prac');
   if (prac) prac.onclick = () => startLesson(MODES.practice);
   el.querySelectorAll('.seg button').forEach(b => b.onclick = () => { S.track = b.dataset.track; save(); renderHome(); });
