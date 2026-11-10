@@ -47,6 +47,7 @@ def texts():
     out += re.findall(r"\bnum\('[^']+',\s*'([^']+)'", src)        # 숫자는 가나로 읽힌다
     out += re.findall(r"\bph\('[^']+',\s*'([^']+)'", src)
     out += re.findall(r"cust:\s*\{\s*jp:\s*'([^']+)'", src)
+    out += re.findall(r"\.say\s*=\s*'([^']+)'", src)                # 읽는 법을 따로 정한 글자
     # 가격 듣기: 앱이 내는 모든 금액
     for n in range(1000, 10000, 500):
         out.append(num_read(n) + 'ウォンです')

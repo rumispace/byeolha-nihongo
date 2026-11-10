@@ -255,3 +255,10 @@ small { display: block; font-size: .78em; color: var(--sub); font-weight: 500; }
 .bem { position: absolute; top: 8px; right: 12px; font-style: normal; font-size: 30px; animation: pop .35s ease-out; }
 .bubble .who + .jp { padding-right: 40px; }
 .mt.jp.long { font-size: 20px; }
+.panel.mode { display: flex; gap: 12px; align-items: flex-start; }
+.mode .mi { font-size: 36px; line-height: 1.2; }
+.mode .mb { flex: 1; min-width: 0; }
+.mode h3 { margin: 0 0 2px; }
+.mode p { margin: 0; font-size: 14px; }
+.mode .btn { margin-top: 10px; padding: 10px 14px; }
+.link { display: block; width: 100%; margin-top: 12px; font-weight: 800; font-size: 14px; color: var(--main-d); text-align: center; }

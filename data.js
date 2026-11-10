@@ -63,6 +63,70 @@ const KW = [
   word('ここ', '코코', '여기'),
 ];
 
+const K5 = [
+  kana('た', '타'),
+  kana('ち', '치', '"ti"가 아니라 "chi"'),
+  kana('つ', '츠', '"쓰"와 "츠" 사이. 혀끝을 윗니 뒤에 대고 짧게'),
+  kana('て', '테'),
+  kana('と', '토'),
+];
+const K6 = [
+  kana('な', '나'),
+  kana('に', '니'),
+  kana('ぬ', '누'),
+  kana('ね', '네'),
+  kana('の', '노'),
+];
+const K7 = [
+  kana('は', '하', '문장에서 "~은/는"으로 쓰일 때만 "와"로 읽어요'),
+  kana('ひ', '히'),
+  kana('ふ', '후', '"후"와 "푸" 사이. 촛불을 끄듯 입술 사이로'),
+  kana('へ', '헤', '문장에서 "~에/~로"로 쓰일 때만 "에"로 읽어요'),
+  kana('ほ', '호'),
+];
+const K8 = [
+  kana('ま', '마'),
+  kana('み', '미'),
+  kana('む', '무'),
+  kana('め', '메'),
+  kana('も', '모'),
+];
+const K9 = [
+  kana('ら', '라'),
+  kana('り', '리'),
+  kana('る', '루'),
+  kana('れ', '레'),
+  kana('ろ', '로'),
+];
+const K10 = [
+  kana('や', '야'),
+  kana('ゆ', '유'),
+  kana('よ', '요'),
+  kana('わ', '와'),
+  kana('を', '오', 'お와 소리가 같아요. "~을/를"로만 씁니다'),
+  kana('ん', '응', '받침 소리(ㄴ·ㅇ·ㅁ). 혼자 읽으면 "응"'),
+];
+/* 낱글자로 읽히면 조사 소리(와·에)가 날 수 있는 글자는 가타카나로 읽힌다 */
+ITEMS['k_は'].say = 'ハ';
+ITEMS['k_へ'].say = 'ヘ';
+
+const KW2 = [
+  word('くすり', '쿠스리', '약'),
+  word('あたま', '아타마', '머리'),
+  word('おなか', '오나카', '배'),
+  word('みみ', '미미', '귀'),
+  word('くち', '쿠치', '입'),
+  word('て', '테', '손'),
+];
+const KW3 = [
+  word('ねつ', '네츠', '열'),
+  word('せき', '세키', '기침'),
+  word('いたい', '이타이', '아프다'),
+  word('かゆい', '카유이', '가렵다'),
+  word('はれ', '하레', '붓기'),
+  word('しわ', '시와', '주름'),
+];
+
 /* ───────── 숫자 ───────── */
 const N1 = [
   num('1', 'いち', '이치'),
@@ -242,6 +306,14 @@ const LESSONS = [
   { id: 'k2', track: 'kana', type: 'kana', title: 'か 줄', sub: 'か き く け こ', items: K2 },
   { id: 'k3', track: 'kana', type: 'kana', title: 'さ 줄', sub: 'さ し す せ そ', items: K3 },
   { id: 'k4', track: 'kana', type: 'word', title: '단어 읽기', sub: '배운 글자로 진짜 단어 읽기', items: KW },
+  { id: 'k5', track: 'kana', type: 'kana', title: 'た 줄', sub: 'た ち つ て と', items: K5 },
+  { id: 'k6', track: 'kana', type: 'kana', title: 'な 줄', sub: 'な に ぬ ね の', items: K6 },
+  { id: 'k7', track: 'kana', type: 'kana', title: 'は 줄', sub: 'は ひ ふ へ ほ', items: K7 },
+  { id: 'k8', track: 'kana', type: 'kana', title: 'ま 줄', sub: 'ま み む め も', items: K8 },
+  { id: 'k9', track: 'kana', type: 'kana', title: 'ら 줄', sub: 'ら り る れ ろ', items: K9 },
+  { id: 'k10', track: 'kana', type: 'kana', title: 'や·わ 줄', sub: 'や ゆ よ わ を ん', items: K10 },
+  { id: 'k11', track: 'kana', type: 'word', title: '몸 단어 읽기', sub: '약 · 머리 · 배 · 귀 · 입 · 손', items: KW2 },
+  { id: 'k12', track: 'kana', type: 'word', title: '증상 단어 읽기', sub: '열 · 기침 · 아프다 · 가렵다', items: KW3 },
 
   // 약국 회화
   {
@@ -367,6 +439,8 @@ const EMOJI = {
   p_onayami: '🪞', p_osusume: '👍', p_keana_ni: '🔬', p_binkan_ok: '🌸', p_ninki: '🔥',
   p_shijutsu: '🩹', p_itsu: '📅', p_hare_osae: '🧊', p_aza: '🟣',
   p_1nichi2kai: '🕑', p_kizuato: '🩹', p_hiyake_nuru: '☀️', p_kosuranai: '🙅‍♀️', p_byoin: '🏥',
+  'w_くすり': '💊', 'w_あたま': '🧠', 'w_おなか': '🫃', 'w_みみ': '👂', 'w_くち': '👄', 'w_て': '✋',
+  'w_ねつ': '🌡️', 'w_せき': '😷', 'w_いたい': '😖', 'w_かゆい': '🦟', 'w_はれ': '🤕', 'w_しわ': '〰️',
   'w_すし': '🍣', 'w_かお': '🙂', 'w_えき': '🚉', 'w_しお': '🧂', 'w_あかい': '🔴', 'w_ここ': '📍',
 };
 Object.keys(EMOJI).forEach(id => { if (ITEMS[id]) ITEMS[id].em = EMOJI[id]; });

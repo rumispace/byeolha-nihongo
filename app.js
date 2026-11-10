@@ -328,19 +328,42 @@ function buildLesson(L) {
   return steps;
 }
 
-function buildReview() {
-  const ids = shuffle(dueItems()).slice(0, 12);
-  const known = Object.keys(S.srs);
-  return ids.map(id => {
-    const it = ITEMS[id];
-    if (it.g === 'phrase' && it.parts && Math.random() < 0.35) return qTiles(it, known);
-    return Math.random() < 0.5 ? qListen(it, known) : qShow(it, known);
-  });
+const learnedIds = () => Object.keys(S.srs).filter(id => ITEMS[id]);
+const doneRoles = () => LESSONS.filter(l => S.done[l.id]).reduce((a, l) => a.concat(l.role || []), []);
+function qAny(it, known) {
+  if (it.g === 'phrase' && it.parts && Math.random() < 0.35) return qTiles(it, known);
+  return Math.random() < 0.5 ? qListen(it, known) : qShow(it, known);
 }
+function buildReview() {
+  const known = learnedIds();
+  return shuffle(dueItems()).slice(0, 12).map(id => qAny(ITEMS[id], known));
+}
+/* 오늘의 연습: 배운 것 전체에서 매번 다르게 뽑는다. 덜 익은 것(상자 번호가 낮은 것)일수록 자주 나온다 */
+function buildPractice() {
+  const known = learnedIds();
+  const key = id => Math.pow(Math.random(), 1 + (S.srs[id].box || 0));
+  const ids = known.map(id => [key(id), id]).sort((a, b) => b[0] - a[0]).slice(0, 8).map(x => x[1]);
+  const steps = ids.map(id => qAny(ITEMS[id], known));
+  shuffle(doneRoles()).slice(0, 2).forEach(r => steps.push(qRole(r, known)));
+  if (S.done.n4) steps.push(qPrice('sen', true));
+  if (S.done.n5) steps.push(qPrice('man', Math.random() < 0.6));
+  return shuffle(steps);
+}
+/* 상황극 연습: 끝낸 레슨의 상황만 모아서 */
+function buildRoles() {
+  const known = learnedIds();
+  return shuffle(doneRoles()).slice(0, 8).map(r => qRole(r, known));
+}
+const MODES = {
+  review: { id: 'review', title: '복습', doneTitle: '복습 끝!', build: buildReview },
+  practice: { id: 'practice', title: '오늘의 연습', doneTitle: '연습 끝!', build: buildPractice },
+  roles: { id: 'roles', title: '상황극 연습', doneTitle: '상황극 끝!', build: buildRoles },
+};
+const canPractice = () => learnedIds().length >= 5;
 
 /* ───────── 레슨 진행 ───────── */
 function startLesson(L) {
-  const steps = L.id === 'review' ? buildReview() : buildLesson(L);
+  const steps = L.build ? L.build() : buildLesson(L);
   if (!steps.length) return;
   sess = { L, steps, i: 0, total: steps.length, cleared: 0, wrong: 0, graded: {} };
   renderStep();
@@ -513,7 +536,7 @@ function renderMatch(step) {
 
 function finishLesson() {
   const L = sess.L;
-  const isReview = L.id === 'review';
+  const isReview = !!L.build;   // 복습·연습은 레슨 진도에 넣지 않는다
   Object.keys(sess.graded).forEach(id => grade(id, sess.graded[id]));
   // 소개만 하고 문제로 안 나온 항목도 내일 복습에 올린다
   if (!isReview) (L.items || []).forEach(id => { if (!S.srs[id]) grade(id, true); });
@@ -534,7 +557,7 @@ function finishLesson() {
   app.innerHTML = `
     <div class="done">
       <div class="mascot big">🦅</div>
-      <h1>${isReview ? '복습 끝!' : '레슨 완료!'}</h1>
+      <h1>${L.doneTitle || '레슨 완료!'}</h1>
       <div class="stats">
         <div><b>+${gain}</b><span>경험치</span></div>
         <div><b>${acc}%</b><span>정확도</span></div>
@@ -564,7 +587,7 @@ function renderHome() {
       </header>
       <main class="page" id="page"></main>
       <nav class="nav">
-        ${[['learn', '📚', '배우기'], ['review', '🔁', '복습'], ['book', '📒', '수첩'], ['set', '⚙️', '설정']].map(([k, ic, nm]) =>
+        ${[['learn', '📚', '배우기'], ['review', '🎯', '연습'], ['book', '📒', '수첩'], ['set', '⚙️', '설정']].map(([k, ic, nm]) =>
     `<button class="${S.tab === k ? 'on' : ''}" data-tab="${k}"><i>${ic}</i>${nm}${k === 'review' && due ? `<b class="dot">${due}</b>` : ''}</button>`).join('')}
       </nav>
     </div>`;
@@ -584,7 +607,8 @@ function viewLearn(el) {
       <div class="say-box">
         <p>${msg}</p>
         ${rec ? `<button class="btn" id="rec">${doneToday() ? '하나 더 하기' : '오늘의 학습 시작'}<small>${TRACKS[rec.track].name} · ${rec.title}</small></button>`
-      : `<p class="note">준비된 레슨을 모두 마쳤어요. 복습으로 실력을 지켜요.</p>`}
+      : `<button class="btn" id="prac">오늘의 연습<small>배운 것에서 매일 다른 문제</small></button>`}
+        ${rec && canPractice() ? `<button class="link" id="prac">🎯 오늘의 연습도 하기</button>` : ''}
       </div>
     </section>
     <div class="seg">
@@ -604,24 +628,28 @@ function viewLearn(el) {
       <p class="soon">다음 단원은 준비 중이에요.</p>
     </div>`;
   if (rec) document.getElementById('rec').onclick = () => startLesson(rec);
+  const prac = document.getElementById('prac');
+  if (prac) prac.onclick = () => startLesson(MODES.practice);
   el.querySelectorAll('.seg button').forEach(b => b.onclick = () => { S.track = b.dataset.track; save(); renderHome(); });
   el.querySelectorAll('.node').forEach(b => b.onclick = () => startLesson(LESSONS.find(l => l.id === b.dataset.id)));
 }
 
 function viewReview(el) {
   const due = dueItems().length;
-  const total = Object.keys(S.srs).length;
+  const total = learnedIds().length;
+  const roles = doneRoles().length;
+  const card = (ic, name, desc, btn) => `
+    <section class="panel mode"><div class="mi">${ic}</div><div class="mb"><h3>${name}</h3><p>${desc}</p>${btn}</div></section>`;
   el.innerHTML = `
-    <section class="panel center">
-      <div class="mascot big">🔁</div>
-      <h2>복습</h2>
-      ${due ? `<p>오늘 다시 볼 것이 <b>${due}개</b> 있어요.</p><button class="btn" id="rv">복습 시작<small>${Math.min(due, 12)}문제</small></button>`
-      : total ? `<p>오늘 복습할 것은 없어요.<br>틀린 것은 내일, 맞힌 것은 며칠 뒤에 다시 나와요.</p>`
-        : `<p>레슨을 하나 마치면 여기에 복습이 쌓여요.</p>`}
-      <p class="note">배운 항목 ${total}개</p>
-    </section>`;
-  const b = document.getElementById('rv');
-  if (b) b.onclick = () => startLesson({ id: 'review', title: '복습' });
+    <h2 class="ptitle">연습</h2>
+    <p class="note">배운 항목 ${total}개 · 매일 조금씩 다시 만나야 입에 붙어요.</p>
+    ${card('🎯', '오늘의 연습', '배운 것 전체에서 매일 다른 문제. 덜 익은 것이 더 자주 나와요.',
+    canPractice() ? `<button class="btn" data-mode="practice">시작<small>약 10문제</small></button>` : `<p class="note">레슨을 하나 마치면 열려요.</p>`)}
+    ${card('🎭', '상황극 연습', '이럴 때 뭐라고 할까요? 손님 상황만 모았어요.',
+    roles >= 3 ? `<button class="btn" data-mode="roles">시작<small>${Math.min(roles, 8)}문제</small></button>` : `<p class="note">약국 회화 레슨을 2개쯤 마치면 열려요.</p>`)}
+    ${card('🔁', '복습', due ? `오늘 다시 볼 것이 <b>${due}개</b> 있어요.` : '틀린 것은 내일, 맞힌 것은 며칠 뒤에 다시 나와요.',
+    due ? `<button class="btn" data-mode="review">시작<small>${Math.min(due, 12)}문제</small></button>` : `<p class="note">오늘 복습할 것은 없어요.</p>`)}`;
+  el.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => startLesson(MODES[b.dataset.mode]));
 }
 
 function viewBook(el) {
