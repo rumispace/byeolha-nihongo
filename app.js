@@ -168,7 +168,7 @@ function grade(id, ok) {
 /* ───────── 문제 만들기 ───────── */
 function face(it, f) {
   switch (f) {
-    case 'jponly': return `<span class="jp xl">${it.jp}</span>`;
+    case 'jponly': return `<span class="jp xl ${it.jp.length > 3 ? 'long' : ''}">${it.jp}</span>`;
     case 'jp': return `<span class="jp">${it.jp}</span>` + (S.set.pron ? `<small>${it.pron}</small>` : '');
     case 'pron': return `<span>${it.pron}</span>`;
     case 'pronko': return `<span>${it.em ? it.em + ' ' : ''}${it.pron}</span><small>${it.ko}</small>`;
@@ -184,17 +184,20 @@ const FACES = {
   phrase: { listen: 'ko', show: 'jp', label: '일본어로 뭐라고 할까요?' },
 };
 
+let curMates = [];   // 지금 푸는 레슨의 항목들
 function distract(it, known, n) {
-  let pool = known.filter(id => id !== it.id && ITEMS[id].g === it.g);
-  if (pool.length < n) {
-    const more = Object.keys(ITEMS).filter(id => id !== it.id && ITEMS[id].g === it.g && !pool.includes(id));
-    pool = pool.concat(shuffle(more));
-  }
-  // 같은 뜻·같은 소리가 겹치면 정답이 두 개가 되므로 거른다
-  const out = [];
-  for (const id of shuffle(pool.slice(0, Math.max(n, pool.length)))) {
+  const same = id => id !== it.id && ITEMS[id].g === it.g;
+  // 글자·단어 읽기는 같은 레슨의 것을 먼저 보기로 쓴다.
+  // 가타카나 문제에 히라가나만 섞이면 모양만 보고 답을 알 수 있기 때문이다
+  const mates = (it.g === 'word' || it.g === 'kana') ? shuffle(curMates.filter(same)) : [];
+  let pool = mates.concat(shuffle(known.filter(id => same(id) && !mates.includes(id))));
+  if (pool.length < n + 2) pool = pool.concat(shuffle(Object.keys(ITEMS).filter(id => same(id) && !pool.includes(id))));
+  // 뜻이나 소리가 같은 보기가 둘이면 정답이 둘이 되거나 같은 보기가 두 번 나온다 (お·を, こ·コ)
+  const out = [], seenP = new Set([it.pron]), seenK = new Set([it.ko]);
+  for (const id of pool) {
     const o = ITEMS[id];
-    if (o.ko === it.ko || o.pron === it.pron) continue;
+    if (seenP.has(o.pron) || seenK.has(o.ko)) continue;
+    seenP.add(o.pron); seenK.add(o.ko);
     out.push(o);
     if (out.length === n) break;
   }
@@ -363,6 +366,7 @@ const canPractice = () => learnedIds().length >= 5;
 
 /* ───────── 레슨 진행 ───────── */
 function startLesson(L) {
+  curMates = L.items || [];
   const steps = L.build ? L.build() : buildLesson(L);
   if (!steps.length) return;
   sess = { L, steps, i: 0, total: steps.length, cleared: 0, wrong: 0, graded: {} };

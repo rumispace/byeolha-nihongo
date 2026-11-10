@@ -338,3 +338,4 @@ body { font-size: 17px; }
 .lg { text-wrap: balance; }
 .lg.md { font-size: 29px; }
 .lg.sm { font-size: 25px; }
+.opt .xl.long { font-size: 27px; }

@@ -127,6 +127,82 @@ const KW3 = [
   word('しわ', '시와', '주름'),
 ];
 
+/* ───────── 가타카나 ─────────
+ * 화장품·성분·외래어는 거의 가타카나로 쓴다. 약국에서는 히라가나만큼 자주 본다. */
+const KA1 = [
+  kana('ア', '아'),
+  kana('イ', '이'),
+  kana('ウ', '우'),
+  kana('エ', '에'),
+  kana('オ', '오'),
+];
+const KA2 = [
+  kana('カ', '카'),
+  kana('キ', '키'),
+  kana('ク', '쿠'),
+  kana('ケ', '케'),
+  kana('コ', '코'),
+];
+const KA3 = [
+  kana('サ', '사'),
+  kana('シ', '시', 'ツ(츠)와 닮았어요. シ는 점 두 개가 옆으로 누워 있습니다'),
+  kana('ス', '스'),
+  kana('セ', '세'),
+  kana('ソ', '소', 'ン(응)과 닮았어요. ソ는 점이 위에서 아래로 내려옵니다'),
+];
+const KA4 = [
+  kana('タ', '타'),
+  kana('チ', '치'),
+  kana('ツ', '츠', 'シ(시)와 닮았어요. ツ는 점 두 개가 위에 나란히 있습니다'),
+  kana('テ', '테'),
+  kana('ト', '토'),
+];
+const KA5 = [
+  kana('ナ', '나'),
+  kana('ニ', '니'),
+  kana('ヌ', '누'),
+  kana('ネ', '네'),
+  kana('ノ', '노'),
+];
+const KA6 = [
+  kana('ハ', '하'),
+  kana('ヒ', '히'),
+  kana('フ', '후'),
+  kana('ヘ', '헤', '히라가나 へ와 거의 같은 모양이에요'),
+  kana('ホ', '호'),
+];
+const KA7 = [
+  kana('マ', '마'),
+  kana('ミ', '미'),
+  kana('ム', '무'),
+  kana('メ', '메'),
+  kana('モ', '모'),
+];
+const KA8 = [
+  kana('ラ', '라'),
+  kana('リ', '리', '히라가나 り와 닮았어요'),
+  kana('ル', '루'),
+  kana('レ', '레'),
+  kana('ロ', '로'),
+];
+const KA9 = [
+  kana('ヤ', '야'),
+  kana('ユ', '유'),
+  kana('ヨ', '요'),
+  kana('ワ', '와'),
+  kana('ヲ', '오', '거의 쓰이지 않아요. 모양만 눈에 익혀 두세요'),
+  kana('ン', '응', 'ソ(소)와 닮았어요. ン은 점이 옆으로 누워 있습니다'),
+];
+const KAW = [
+  word('クリーム', '쿠리-무', '크림'),
+  word('マスク', '마스쿠', '마스크'),
+  word('コスメ', '코스메', '화장품'),
+  word('ケア', '케아', '케어'),
+  word('ミスト', '미스토', '미스트'),
+  word('レシート', '레시-토', '영수증'),
+];
+ITEMS['w_クリーム'].tip = '"ー"는 글자가 아니라 "앞 소리를 길게" 하라는 표시예요. クリーム = 쿠리-무';
+
 /* ───────── 숫자 ───────── */
 const N1 = [
   num('1', 'いち', '이치'),
@@ -421,6 +497,127 @@ Object.assign(ITEMS.r_kami, { tip: '일본 뷰티 잡지가 한국 약국 제품
 Object.assign(ITEMS.r_yakkyokucosme, { tip: '올리브영이 아니라 "약국에서만 파는 화장품"을 일본에서는 이렇게 부릅니다' });
 Object.assign(ITEMS.p_sounandesune, { tip: '손님 말에 공손하게 맞장구칠 때. "나루호도"보다 한 단계 정중해요' });
 
+/* ───────── 일상 회화 ─────────
+ * 계산을 기다리는 30초에 건네는 말. 응대가 훨씬 부드러워진다. */
+const TALK1 = [
+  ph('p_goryoko', 'ご旅行ですか', 'ごりょこうですか', '고료코-데스카', '여행 오셨어요?',
+    [['ご旅行', '고료코-'], ['ですか', '데스카']]),
+  ph('p_hajimete', '韓国は初めてですか', 'かんこくは はじめてですか', '캉코쿠와 하지메테데스카', '한국은 처음이세요?',
+    [['韓国は', '캉코쿠와'], ['初めて', '하지메테'], ['ですか', '데스카']]),
+  ph('p_benkyochu', '日本語を勉強中です', 'にほんごを べんきょうちゅうです', '니홍고오 벵쿄-츄-데스', '일본어 공부 중입니다',
+    [['日本語を', '니홍고오'], ['勉強中', '벵쿄-츄-'], ['です', '데스']]),
+  ph('p_sukoshi', '日本語が少しできます', 'にほんごが すこし できます', '니홍고가 스코시 데키마스', '일본어를 조금 합니다',
+    [['日本語が', '니홍고가'], ['少し', '스코시'], ['できます', '데키마스']]),
+  ph('p_tanoshinde', '楽しんでください', 'たのしんでください', '타노신데 쿠다사이', '즐거운 여행 되세요',
+    [['楽しんで', '타노신데'], ['ください', '쿠다사이']]),
+];
+const TALK2 = [
+  ph('p_dochira', 'どちらからですか', 'どちらからですか', '도치라카라데스카', '어디서 오셨어요?',
+    [['どちらから', '도치라카라'], ['ですか', '데스카']]),
+  ph('r_tokyo', '東京から来ました', 'とうきょうから きました', '도-쿄-카라 키마시타', '도쿄에서 왔어요'),
+  ph('p_iidesune', 'いいですね', 'いいですね', '이-데스네', '좋네요'),
+  ph('p_samui', '寒いですね', 'さむいですね', '사무이데스네', '춥네요'),
+  ph('p_atsui', '暑いですね', 'あついですね', '아츠이데스네', '덥네요'),
+  ph('p_okiwotsukete', 'お気をつけて', 'おきをつけて', '오키오츠케테', '조심히 가세요'),
+];
+
+/* ───────── 정중한 접객 ─────────
+ * 일본 접객의 기본기. 짧은 한마디가 문장 전체를 공손하게 만든다. */
+const KEIGO1 = [
+  ph('p_douzo', 'どうぞ', 'どうぞ', '도-조', '여기요 / 자, 받으세요'),
+  ph('p_omatase', 'お待たせしました', 'おまたせしました', '오마타세시마시타', '기다리셨습니다'),
+  ph('p_shitsurei', '失礼します', 'しつれいします', '시츠레-시마스', '실례합니다'),
+  ph('p_osoreirimasu', '恐れ入りますが', 'おそれいりますが', '오소레이리마스가', '죄송하지만 (부탁하기 전에)'),
+  ph('p_yoroshikereba', 'よろしければ', 'よろしければ', '요로시케레바', '괜찮으시면 (권하기 전에)'),
+  ph('p_goannai', 'ご案内します', 'ごあんないします', '고안나이시마스', '안내해 드리겠습니다',
+    [['ご案内', '고안나이'], ['します', '시마스']]),
+];
+
+/* ───────── 수량·위치·시간 ───────── */
+const COUNT1 = [
+  ph('v_hitotsu', 'ひとつ', 'ひとつ', '히토츠', '하나 (1개)'),
+  ph('v_futatsu', 'ふたつ', 'ふたつ', '후타츠', '둘 (2개)'),
+  ph('v_mittsu', 'みっつ', 'みっつ', '밋츠', '셋 (3개)'),
+  ph('v_yottsu', 'よっつ', 'よっつ', '욧츠', '넷 (4개)'),
+  ph('v_itsutsu', 'いつつ', 'いつつ', '이츠츠', '다섯 (5개)'),
+  ph('v_ikutsu', 'いくつ', 'いくつ', '이쿠츠', '몇 개'),
+];
+const COUNT2 = [
+  ph('p_ikutsu', 'いくつ必要ですか', 'いくつ ひつようですか', '이쿠츠 히츠요-데스카', '몇 개 필요하세요?',
+    [['いくつ', '이쿠츠'], ['必要', '히츠요-'], ['ですか', '데스카']]),
+  ph('p_zenbude3', '全部でみっつですね', 'ぜんぶで みっつですね', '젠부데 밋츠데스네', '전부 3개 맞으시죠?',
+    [['全部で', '젠부데'], ['みっつ', '밋츠'], ['ですね', '데스네']]),
+  ph('p_ohitorisama', 'お一人様みっつまでです', 'おひとりさま みっつまでです', '오히토리사마 밋츠마데데스', '한 분당 3개까지입니다',
+    [['お一人様', '오히토리사마'], ['みっつまで', '밋츠마데'], ['です', '데스']]),
+  ph('r_mouhitotsu', 'もうひとつください', 'もうひとつ ください', '모- 히토츠 쿠다사이', '하나 더 주세요'),
+];
+const PLACE1 = [
+  ph('p_achira', 'あちらです', 'あちらです', '아치라데스', '저쪽입니다',
+    [['あちら', '아치라'], ['です', '데스']]),
+  ph('p_migi', '右側にあります', 'みぎがわに あります', '미기가와니 아리마스', '오른쪽에 있습니다',
+    [['右側に', '미기가와니'], ['あります', '아리마스']]),
+  ph('p_hidari', '左側にあります', 'ひだりがわに あります', '히다리가와니 아리마스', '왼쪽에 있습니다',
+    [['左側に', '히다리가와니'], ['あります', '아리마스']]),
+  ph('p_rejimae', 'レジの前にあります', 'レジの まえに あります', '레지노 마에니 아리마스', '계산대 앞에 있습니다',
+    [['レジの', '레지노'], ['前に', '마에니'], ['あります', '아리마스']]),
+  ph('p_9ji', '夜9時までです', 'よる くじまでです', '요루 쿠지마데데스', '밤 9시까지입니다',
+    [['夜', '요루'], ['9時まで', '쿠지마데'], ['です', '데스']]),
+];
+
+/* ───────── 손님 질문 ───────── */
+const QA1 = [
+  ph('r_nanikiku', 'これは何に効きますか', 'これは なにに ききますか', '코레와 나니니 키키마스카', '이건 어디에 좋아요?'),
+  ph('r_tsukaikata', '使い方を教えてください', 'つかいかたを おしえてください', '츠카이카타오 오시에테 쿠다사이', '사용법을 알려 주세요'),
+  ph('r_kodomo', '子供も使えますか', 'こどもも つかえますか', '코도모모 츠카에마스카', '아이도 쓸 수 있나요?'),
+  ph('r_fukusayo', '副作用はありますか', 'ふくさようは ありますか', '후쿠사요-와 아리마스카', '부작용이 있나요?'),
+  ph('r_kigen', '使用期限はいつですか', 'しようきげんは いつですか', '시요-키겐와 이츠데스카', '사용기한이 언제예요?'),
+  ph('r_mochikaeri', '日本に持って帰れますか', 'にほんに もってかえれますか', '니혼니 못테 카에레마스카', '일본에 가져갈 수 있나요?'),
+];
+const QA2 = [
+  ph('p_kigen', '使用期限はこちらです', 'しようきげんは こちらです', '시요-키겐와 코치라데스', '사용기한은 여기입니다',
+    [['使用期限は', '시요-키겐와'], ['こちら', '코치라'], ['です', '데스']]),
+  ph('p_okosama', 'お子様も使えます', 'おこさまも つかえます', '오코사마모 츠카에마스', '아이도 쓸 수 있습니다',
+    [['お子様も', '오코사마모'], ['使えます', '츠카에마스']]),
+  ph('p_otonayo', '大人用です', 'おとなようです', '오토나요-데스', '성인용입니다',
+    [['大人用', '오토나요-'], ['です', '데스']]),
+  ph('p_setsumeisho', '説明書をご覧ください', 'せつめいしょを ごらんください', '세츠메-쇼오 고란 쿠다사이', '설명서를 봐 주세요',
+    [['説明書を', '세츠메-쇼오'], ['ご覧', '고란'], ['ください', '쿠다사이']]),
+  ph('p_zeikan', '税関でご確認ください', 'ぜいかんで ごかくにんください', '제-칸데 고카쿠닌 쿠다사이', '세관에서 확인해 주세요',
+    [['税関で', '제-칸데'], ['ご確認', '고카쿠닌'], ['ください', '쿠다사이']]),
+  ph('p_honyaku', '翻訳アプリを使ってもいいですか', 'ほんやくアプリを つかっても いいですか', '홍야쿠 아푸리오 츠캇테모 이-데스카', '번역 앱을 써도 될까요?',
+    [['翻訳アプリを', '홍야쿠 아푸리오'], ['使っても', '츠캇테모'], ['いいですか', '이-데스카']]),
+];
+
+/* ───────── 여행자 단골 증상 ───────── */
+const SYM1 = [
+  ph('v_futsukayoi', '二日酔い', 'ふつかよい', '후츠카요이', '숙취'),
+  ph('v_imotare', '胃もたれ', 'いもたれ', '이모타레', '속이 더부룩함'),
+  ph('v_benpi', '便秘', 'べんぴ', '벤피', '변비'),
+  ph('v_konaien', '口内炎', 'こうないえん', '코-나이엔', '구내염'),
+  ph('v_kinnikutsu', '筋肉痛', 'きんにくつう', '킨니쿠츠-', '근육통'),
+  ph('v_kutsuzure', '靴ずれ', 'くつずれ', '쿠츠즈레', '신발에 쓸린 상처'),
+];
+const SYM2 = [
+  ph('v_seiritsu', '生理痛', 'せいりつう', '세-리츠-', '생리통'),
+  ph('v_mushisasare', '虫刺され', 'むしさされ', '무시사사레', '벌레 물림'),
+  ph('v_norimonoyoi', '乗り物酔い', 'のりものよい', '노리모노요이', '멀미'),
+  ph('v_kayumi', 'かゆみ', 'かゆみ', '카유미', '가려움'),
+  ph('v_hanazumari', '鼻づまり', 'はなづまり', '하나즈마리', '코막힘'),
+  ph('v_tsukare', '疲れ', 'つかれ', '츠카레', '피로'),
+];
+Object.assign(ITEMS.p_benkyochu, { tip: '서툴러도 괜찮아요. 이 한마디를 먼저 하면 손님이 쉬운 말로 천천히 이야기해 줍니다' });
+Object.assign(ITEMS.p_douzo, { tip: '물건을 건넬 때, 자리를 권할 때, 먼저 하시라고 할 때 모두 "도-조". 가장 쓸모가 많은 한마디입니다' });
+Object.assign(ITEMS.p_omatase, { tip: '재고를 찾아오거나 계산이 끝났을 때. 일본에서는 5초를 기다리게 해도 이 말을 합니다' });
+Object.assign(ITEMS.p_osoreirimasu, { tip: '"여권 부탁드립니다" 앞에 붙이면 훨씬 공손해져요. 오소레이리마스가, 파스포-토오 오네가이시마스' });
+Object.assign(ITEMS.p_yoroshikereba, { tip: '"테스트해 보시겠어요?" 앞에 붙이면 부담이 없어집니다. 요로시케레바, 오타메시니 나리마스카' });
+Object.assign(ITEMS.p_ohitorisama, { tip: '구매 수량 제한이 있을 때만. 숫자는 히토츠·후타츠·밋츠로 바꿔 말하면 됩니다' });
+Object.assign(ITEMS.p_9ji, { tip: '시간은 예시예요. 숫자 뒤에 "지(時)"를 붙입니다. 8시 = 하치지, 10시 = 쥬-지' });
+Object.assign(ITEMS.p_zeikan, { tip: '일본 반입 규정은 품목과 수량에 따라 다릅니다. "됩니다"라고 단정하지 말고 확인을 권하는 것이 안전해요' });
+Object.assign(ITEMS.p_honyaku, { tip: '설명이 복잡해져 말이 막히면 이 문장으로 넘어가세요. 틀린 설명보다 번역 앱이 낫습니다' });
+Object.assign(ITEMS.r_nanikiku, { tip: '"키키마스카(효과가 있나요)"가 들리면 효능을 묻는 것입니다' });
+Object.assign(ITEMS.v_kutsuzure, { tip: '많이 걷는 여행객이 밴드를 찾을 때 쓰는 말' });
+Object.assign(ITEMS.v_ikutsu, { tip: '물건을 셀 때는 이치·니·산이 아니라 히토츠·후타츠·밋츠를 씁니다' });
+
 /* ───────── 레슨 ─────────
  * type: kana | word | num | phrase | vocab | price   (vocab = 단어 묶음. ph() 로 만들되 조각 없이)
  * role: 상황극 문제. em=장면 그림, sit=상황 설명, cust=손님 대사, ans=정답 문장 id
@@ -428,18 +625,28 @@ Object.assign(ITEMS.p_sounandesune, { tip: '손님 말에 공손하게 맞장구
  */
 const LESSONS = [
   // 발음
-  { id: 'k1', track: 'kana', type: 'kana', title: 'あ 줄', sub: 'あ い う え お', items: K1 },
-  { id: 'k2', track: 'kana', type: 'kana', title: 'か 줄', sub: 'か き く け こ', items: K2 },
-  { id: 'k3', track: 'kana', type: 'kana', title: 'さ 줄', sub: 'さ し す せ そ', items: K3 },
-  { id: 'k4', track: 'kana', type: 'word', title: '단어 읽기', sub: '배운 글자로 진짜 단어 읽기', items: KW },
-  { id: 'k5', track: 'kana', type: 'kana', title: 'た 줄', sub: 'た ち つ て と', items: K5 },
-  { id: 'k6', track: 'kana', type: 'kana', title: 'な 줄', sub: 'な に ぬ ね の', items: K6 },
-  { id: 'k7', track: 'kana', type: 'kana', title: 'は 줄', sub: 'は ひ ふ へ ほ', items: K7 },
-  { id: 'k8', track: 'kana', type: 'kana', title: 'ま 줄', sub: 'ま み む め も', items: K8 },
-  { id: 'k9', track: 'kana', type: 'kana', title: 'ら 줄', sub: 'ら り る れ ろ', items: K9 },
-  { id: 'k10', track: 'kana', type: 'kana', title: 'や·わ 줄', sub: 'や ゆ よ わ を ん', items: K10 },
-  { id: 'k11', track: 'kana', type: 'word', title: '몸 단어 읽기', sub: '약 · 머리 · 배 · 귀 · 입 · 손', items: KW2 },
-  { id: 'k12', track: 'kana', type: 'word', title: '증상 단어 읽기', sub: '열 · 기침 · 아프다 · 가렵다', items: KW3 },
+  { id: 'k1', track: 'kana', unit: '히라가나', type: 'kana', title: 'あ 줄', sub: 'あ い う え お', items: K1 },
+  { id: 'k2', track: 'kana', unit: '히라가나', type: 'kana', title: 'か 줄', sub: 'か き く け こ', items: K2 },
+  { id: 'k3', track: 'kana', unit: '히라가나', type: 'kana', title: 'さ 줄', sub: 'さ し す せ そ', items: K3 },
+  { id: 'k4', track: 'kana', unit: '히라가나', type: 'word', title: '단어 읽기', sub: '배운 글자로 진짜 단어 읽기', items: KW },
+  { id: 'k5', track: 'kana', unit: '히라가나', type: 'kana', title: 'た 줄', sub: 'た ち つ て と', items: K5 },
+  { id: 'k6', track: 'kana', unit: '히라가나', type: 'kana', title: 'な 줄', sub: 'な に ぬ ね の', items: K6 },
+  { id: 'k7', track: 'kana', unit: '히라가나', type: 'kana', title: 'は 줄', sub: 'は ひ ふ へ ほ', items: K7 },
+  { id: 'k8', track: 'kana', unit: '히라가나', type: 'kana', title: 'ま 줄', sub: 'ま み む め も', items: K8 },
+  { id: 'k9', track: 'kana', unit: '히라가나', type: 'kana', title: 'ら 줄', sub: 'ら り る れ ろ', items: K9 },
+  { id: 'k10', track: 'kana', unit: '히라가나', type: 'kana', title: 'や·わ 줄', sub: 'や ゆ よ わ を ん', items: K10 },
+  { id: 'k11', track: 'kana', unit: '히라가나', type: 'word', title: '몸 단어 읽기', sub: '약 · 머리 · 배 · 귀 · 입 · 손', items: KW2 },
+  { id: 'k12', track: 'kana', unit: '히라가나', type: 'word', title: '증상 단어 읽기', sub: '열 · 기침 · 아프다 · 가렵다', items: KW3 },
+  { id: 'ka1', track: 'kana', unit: '가타카나', type: 'kana', title: 'ア 줄', sub: 'ア イ ウ エ オ', items: KA1 },
+  { id: 'ka2', track: 'kana', unit: '가타카나', type: 'kana', title: 'カ 줄', sub: 'カ キ ク ケ コ', items: KA2 },
+  { id: 'ka3', track: 'kana', unit: '가타카나', type: 'kana', title: 'サ 줄', sub: 'サ シ ス セ ソ', items: KA3 },
+  { id: 'ka4', track: 'kana', unit: '가타카나', type: 'kana', title: 'タ 줄', sub: 'タ チ ツ テ ト', items: KA4 },
+  { id: 'ka5', track: 'kana', unit: '가타카나', type: 'kana', title: 'ナ 줄', sub: 'ナ ニ ヌ ネ ノ', items: KA5 },
+  { id: 'ka6', track: 'kana', unit: '가타카나', type: 'kana', title: 'ハ 줄', sub: 'ハ ヒ フ ヘ ホ', items: KA6 },
+  { id: 'ka7', track: 'kana', unit: '가타카나', type: 'kana', title: 'マ 줄', sub: 'マ ミ ム メ モ', items: KA7 },
+  { id: 'ka8', track: 'kana', unit: '가타카나', type: 'kana', title: 'ラ 줄', sub: 'ラ リ ル レ ロ', items: KA8 },
+  { id: 'ka9', track: 'kana', unit: '가타카나', type: 'kana', title: 'ヤ·ワ 줄', sub: 'ヤ ユ ヨ ワ ヲ ン', items: KA9 },
+  { id: 'kaw', track: 'kana', unit: '가타카나', type: 'word', title: '가타카나 단어 읽기', sub: '크림 · 마스크 · 코스메 · 영수증', items: KAW },
 
   // 약국 회화
   {
@@ -602,10 +809,67 @@ const LESSONS = [
       { em: '📭', sit: '손님이 찾는 제품이 다 팔렸습니다.', ans: 'p_urikiredesu' },
     ],
   },
+  {
+    id: 'keigo1', track: 'pharm', unit: '정중한 접객', type: 'phrase', title: '공손해지는 한마디', sub: '도-조 · 기다리셨습니다 · 죄송하지만',
+    items: KEIGO1, today: 'p_douzo',
+    role: [
+      { em: '📦', sit: '재고를 찾아서 돌아왔습니다.', ans: 'p_omatase' },
+      { em: '🤲', sit: '거스름돈과 물건을 건넵니다.', ans: 'p_douzo' },
+      { em: '🚶', sit: '손님 뒤를 지나가야 합니다.', ans: 'p_shitsurei' },
+    ],
+  },
+  { id: 'count1', track: 'pharm', unit: '수량·위치·시간', type: 'vocab', title: '개수 세기', sub: '히토츠 · 후타츠 · 밋츠 · 몇 개', items: COUNT1 },
+  {
+    id: 'count2', track: 'pharm', unit: '수량·위치·시간', type: 'phrase', title: '몇 개 드릴까요', sub: '몇 개 필요하세요? · 한 분당 3개까지',
+    items: COUNT2, today: 'p_ikutsu',
+    role: [
+      { em: '🧴', cust: { jp: 'これください', pron: '코레 쿠다사이', ko: '이거 주세요' }, sit: '몇 개를 원하는지 모릅니다.', ans: 'p_ikutsu' },
+      { em: '🧮', sit: '계산 전에 개수를 다시 확인합니다.', ans: 'p_zenbude3' },
+    ],
+  },
+  {
+    id: 'place1', track: 'pharm', unit: '수량·위치·시간', type: 'phrase', title: '위치와 영업시간', sub: '오른쪽에 있습니다 · 밤 9시까지',
+    items: PLACE1, today: 'p_migi',
+    role: [
+      { em: '🕘', cust: { jp: '何時までですか', pron: '난지마데데스카', ko: '몇 시까지 해요?' }, sit: '밤 9시에 닫습니다.', ans: 'p_9ji' },
+      { em: '👉', cust: { jp: 'マスクはどこですか', pron: '마스쿠와 도코데스카', ko: '마스크는 어디 있어요?' }, sit: '계산대 앞에 있습니다.', ans: 'p_rejimae' },
+    ],
+  },
+  { id: 'qa1', track: 'pharm', unit: '손님 질문', type: 'vocab', title: '손님이 묻는 말', sub: '어디에 좋아요? · 아이도 쓸 수 있나요?', items: QA1 },
+  {
+    id: 'qa2', track: 'pharm', unit: '손님 질문', type: 'phrase', title: '질문에 답하기', sub: '사용기한은 여기입니다 · 번역 앱',
+    items: QA2, today: 'p_honyaku',
+    role: [
+      { em: '👶', cust: { jp: '子供も使えますか', pron: '코도모모 츠카에마스카', ko: '아이도 쓸 수 있나요?' }, sit: '성인용 제품입니다.', ans: 'p_otonayo' },
+      { em: '📅', cust: { jp: '使用期限はいつですか', pron: '시요-키겐와 이츠데스카', ko: '사용기한이 언제예요?' }, ans: 'p_kigen' },
+      { em: '✈️', cust: { jp: '日本に持って帰れますか', pron: '니혼니 못테 카에레마스카', ko: '일본에 가져갈 수 있나요?' }, ans: 'p_zeikan' },
+      { em: '😵‍💫', sit: '설명이 복잡해져서 말이 막혔습니다.', ans: 'p_honyaku' },
+    ],
+  },
+  { id: 'sym1', track: 'pharm', unit: '여행자 단골 증상', type: 'vocab', title: '먹고 걷다 생기는 증상', sub: '숙취 · 더부룩함 · 구내염 · 근육통', items: SYM1 },
+  { id: 'sym2', track: 'pharm', unit: '여행자 단골 증상', type: 'vocab', title: '그 밖의 증상', sub: '생리통 · 벌레 물림 · 멀미 · 코막힘', items: SYM2 },
+  {
+    id: 'talk1', track: 'pharm', unit: '일상 회화', type: 'phrase', title: '말 걸기', sub: '여행 오셨어요? · 일본어 공부 중입니다',
+    items: TALK1, today: 'p_benkyochu',
+    role: [
+      { em: '🙂', sit: '일본어가 서툴다는 것을 먼저 알리고 싶습니다.', ans: 'p_benkyochu' },
+      { em: '🧳', sit: '캐리어를 끌고 온 손님에게 말을 겁니다.', ans: 'p_goryoko' },
+      { em: '👋', sit: '여행 온 손님을 배웅합니다.', ans: 'p_tanoshinde' },
+    ],
+  },
+  {
+    id: 'talk2', track: 'pharm', unit: '일상 회화', type: 'phrase', title: '짧은 잡담', sub: '어디서 오셨어요? · 춥네요 · 조심히 가세요',
+    items: TALK2, today: 'p_okiwotsukete',
+    role: [
+      { em: '🥶', sit: '한겨울, 손님이 떨면서 들어왔습니다.', ans: 'p_samui' },
+      { em: '🗾', cust: { jp: '大阪から来ました', pron: '오-사카카라 키마시타', ko: '오사카에서 왔어요' }, ans: 'p_iidesune' },
+      { em: '🌧️', sit: '비 오는 날, 손님이 나갑니다.', ans: 'p_okiwotsukete' },
+    ],
+  },
 ];
 
 const TRACKS = {
-  kana: { name: '발음', desc: '히라가나 읽기, 하루 5자' },
+  kana: { name: '발음', desc: '히라가나·가타카나 읽기' },
   pharm: { name: '약국 회화', desc: '카운터에서 바로 쓰는 말' },
 };
 
@@ -635,6 +899,17 @@ const EMOJI = {
   r_korekudasai: '👉', r_daijobu: '🙅‍♀️', r_kangaemasu: '🤔', r_takai: '💸', r_kawaii: '🥰', r_arimasuka: '📱',
   r_yakkyokucosme: '🧴', r_kami: '👑', r_sukusho: '📱', r_urikire: '📭', r_wadai: '🔥', r_hadaniau: '👌',
   p_sounandesune: '💬', p_kashikomari: '🙆‍♀️', p_mochiron: '👍', p_yokatta: '😊', p_urikiredesu: '📭',
+  p_goryoko: '🧳', p_hajimete: '🇰🇷', p_benkyochu: '📖', p_sukoshi: '🤏', p_tanoshinde: '🎉',
+  p_dochira: '🗾', r_tokyo: '🗼', p_iidesune: '😊', p_samui: '🥶', p_atsui: '🥵', p_okiwotsukete: '🙋‍♀️',
+  p_douzo: '🤲', p_omatase: '🙇‍♀️', p_shitsurei: '🚶', p_osoreirimasu: '🙏', p_yoroshikereba: '💁‍♀️', p_goannai: '🧭',
+  v_hitotsu: '1️⃣', v_futatsu: '2️⃣', v_mittsu: '3️⃣', v_yottsu: '4️⃣', v_itsutsu: '5️⃣', v_ikutsu: '❓',
+  p_ikutsu: '🧮', p_zenbude3: '🧾', p_ohitorisama: '☝️', r_mouhitotsu: '➕',
+  p_achira: '👉', p_migi: '➡️', p_hidari: '⬅️', p_rejimae: '🛒', p_9ji: '🕘',
+  r_nanikiku: '❓', r_tsukaikata: '📋', r_kodomo: '👶', r_fukusayo: '⚠️', r_kigen: '📅', r_mochikaeri: '✈️',
+  p_kigen: '📅', p_okosama: '👶', p_otonayo: '🧑', p_setsumeisho: '📄', p_zeikan: '🛃', p_honyaku: '📲',
+  v_futsukayoi: '🍺', v_imotare: '🫃', v_benpi: '🚽', v_konaien: '👄', v_kinnikutsu: '🦵', v_kutsuzure: '👟',
+  v_seiritsu: '🩸', v_mushisasare: '🦟', v_norimonoyoi: '🚌', v_kayumi: '🫳', v_hanazumari: '🤧', v_tsukare: '😮‍💨',
+  'w_クリーム': '🧴', 'w_マスク': '😷', 'w_コスメ': '💄', 'w_ケア': '🫧', 'w_ミスト': '💦', 'w_レシート': '🧾',
   'w_くすり': '💊', 'w_あたま': '🧠', 'w_おなか': '🫃', 'w_みみ': '👂', 'w_くち': '👄', 'w_て': '✋',
   'w_ねつ': '🌡️', 'w_せき': '😷', 'w_いたい': '😖', 'w_かゆい': '🦟', 'w_はれ': '🤕', 'w_しわ': '〰️',
   'w_すし': '🍣', 'w_かお': '🙂', 'w_えき': '🚉', 'w_しお': '🧂', 'w_あかい': '🔴', 'w_ここ': '📍',
@@ -646,7 +921,8 @@ Object.keys(EMOJI).forEach(id => { if (ITEMS[id]) ITEMS[id].em = EMOJI[id]; });
  * SALES : "판매 꿀팁 표현!" — 문장 id → 언제 쓰면 좋은지 한 줄.
  * CUST  : 손님이 하는 말. 말할 필요는 없고 알아듣기만 하면 된다. */
 const MUST = ['p_irasshai', 'p_arigato', 'p_shosho', 'p_mouichido', 'p_won', 'p_card', 'p_passport',
-  'p_osusume', 'p_shijutsu', 'p_1nichi2kai', 'p_dousare', 'p_hokani', 'p_byoin', 'p_shashin', 'r_daijobu', 'p_kashikomari'];
+  'p_osusume', 'p_shijutsu', 'p_1nichi2kai', 'p_dousare', 'p_hokani', 'p_byoin', 'p_shashin', 'r_daijobu', 'p_kashikomari',
+  'p_benkyochu', 'p_douzo', 'p_omatase', 'p_ikutsu', 'p_honyaku'];
 const SALES = {
   p_osusume: '뭘 살지 망설이는 손님에게. 이 한마디가 구매를 결정합니다',
   p_ninki: '"다들 사 가는 제품"이라는 말은 어느 나라 손님에게나 통합니다',
@@ -662,7 +938,8 @@ const SALES = {
   p_binkan_ok: '시술 후 손님이 가장 걱정하는 부분을 먼저 풀어 주는 말',
 };
 const CUST = ['p_ikura', 'r_yabai', 'r_sugoi', 'r_majide', 'r_meccha', 'r_hee', 'r_korekudasai', 'r_daijobu',
-  'r_kangaemasu', 'r_takai', 'r_kawaii', 'r_arimasuka', 'r_yakkyokucosme', 'r_kami', 'r_sukusho', 'r_urikire', 'r_wadai', 'r_hadaniau'];
+  'r_kangaemasu', 'r_takai', 'r_kawaii', 'r_arimasuka', 'r_yakkyokucosme', 'r_kami', 'r_sukusho', 'r_urikire', 'r_wadai', 'r_hadaniau',
+  'r_tokyo', 'r_mouhitotsu', 'r_nanikiku', 'r_tsukaikata', 'r_kodomo', 'r_fukusayo', 'r_kigen', 'r_mochikaeri'];
 MUST.forEach(id => { if (ITEMS[id]) ITEMS[id].must = true; });
 Object.keys(SALES).forEach(id => { if (ITEMS[id]) ITEMS[id].sales = SALES[id]; });
 CUST.forEach(id => { if (ITEMS[id]) ITEMS[id].cust = true; });
