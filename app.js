@@ -577,6 +577,7 @@ function finishLesson() {
 
 /* ───────── 홈 ───────── */
 function renderHome() {
+  if (needReload) { const v = needReload; needReload = false; reloadOnce(v); }
   const tabs = { learn: viewLearn, review: viewReview, book: viewBook, set: viewSet };
   const due = dueItems().length;
   app.innerHTML = `
@@ -702,7 +703,33 @@ function viewSet(el) {
 }
 
 /* ───────── 시작 ───────── */
+/* ───────── 새 내용 자동 반영 ─────────
+ * ver.js 의 APP_VER 는 지금 화면에 올라온 파일의 번호, version.json 은 서버의 최신 번호.
+ * 앱을 열 때와 다른 앱에 갔다 돌아올 때 비교해서, 다르면 새로 불러온다.
+ * 레슨 중에는 끊지 않고 홈으로 돌아올 때 불러온다. */
+let needReload = false;
+function reloadOnce(v) {
+  try {
+    if (sessionStorage.getItem('bn_reloaded') === String(v)) return;   // 같은 번호로 두 번 돌지 않는다
+    sessionStorage.setItem('bn_reloaded', String(v));
+  } catch (e) { return; }
+  location.reload();
+}
+async function checkVersion() {
+  if (typeof APP_VER === 'undefined') return;
+  try {
+    const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return;
+    const v = (await r.json()).v;
+    if (v === APP_VER) return;
+    if (sess) needReload = v; else reloadOnce(v);
+  } catch (e) { /* 인터넷이 없으면 지금 내용 그대로 */ }
+}
+
 renderHome();
+checkVersion();
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkVersion(); });
+window.addEventListener('pageshow', e => { if (e.persisted) checkVersion(); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.register('sw.js').catch(() => { });
 }
