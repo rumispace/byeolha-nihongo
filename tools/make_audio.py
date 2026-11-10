@@ -52,7 +52,7 @@ def texts():
     scenes = ROOT / 'scenes.js'
     if scenes.exists():
         sc = re.sub(r'^\s*(\*|/\*|//).*$', '', scenes.read_text(encoding='utf-8'), flags=re.M)   # 주석 속 예시는 뺀다
-        out += re.findall(r"\bc:\s*'([^']+)'", sc)
+        out += re.findall(r"\b[ca]:\s*\[\s*'([^']+)'", sc)        # 손님 대사(c)와 알맞은 대답(a)
     # 가격 듣기: 앱이 내는 모든 금액
     for n in range(1000, 10000, 500):
         out.append(num_read(n) + 'ウォンです')

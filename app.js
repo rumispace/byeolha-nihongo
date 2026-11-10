@@ -625,7 +625,7 @@ function viewLearn(el) {
     </section>
     <button class="shopcard" id="shopgo">
       <span class="si">🏪</span>
-      <span class="st"><b>약국 영업</b><small>3D 약국에서 손님을 일본어로 응대해요</small></span>
+      <span class="st"><b>약국 영업</b><small>손님이 말을 걸어요. 일본어로 응대해 보세요</small></span>
       <span class="sgo">▶</span>
     </button>
     <div class="seg">

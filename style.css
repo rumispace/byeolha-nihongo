@@ -400,3 +400,74 @@ body { font-size: 17px; }
 .shopend .say + .say { margin-top: 8px; }
 /* small 을 block 으로 바꿔 둔 탓에 hidden 이 무시되던 것을 바로잡는다 */
 [hidden] { display: none !important; }
+
+/* ───────── 약국 영업: 2D 무대 ───────── */
+.shop-view { background: #FFF2D9; min-height: 250px; }
+.stage { position: absolute; left: 0; top: 0; width: 400px; height: 250px; transform-origin: 0 0; }
+.stage-bg, .stage-fg { position: absolute; left: 0; top: 0; width: 400px; height: 250px; display: block; }
+.stage-fg { z-index: 3; pointer-events: none; }
+.actor { position: absolute; width: 76px; height: 101px; transition: left linear, opacity .3s; }
+.actor .chr { width: 100%; height: 100%; overflow: visible; display: block; }
+.actor.pharm { left: 256px; bottom: 82px; z-index: 2; }
+.actor.cust { bottom: 24px; z-index: 4; }
+.actor.arrive { opacity: 0; }
+.actor .tag {
+  position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%); white-space: nowrap;
+  background: rgba(50, 36, 24, .74); color: #fff; font-size: 8px; font-weight: 700; padding: 1px 7px; border-radius: 7px;
+}
+.emote {
+  position: absolute; left: 50%; top: -10px; transform: translateX(-50%) scale(0); font-style: normal;
+  background: #fff; border: 2px solid #4A3426; border-radius: 10px; padding: 0 7px; font-weight: 900; font-size: 15px; color: #E8556D; line-height: 1.35;
+}
+.emote.on { animation: emo .9s ease-out forwards; }
+@keyframes emo { 0% { transform: translateX(-50%) scale(0); } 25% { transform: translateX(-50%) translateY(-4px) scale(1.25); } 40%, 100% { transform: translateX(-50%) scale(1); } }
+
+.chr .bodyg { animation: c-idle 2.4s ease-in-out infinite; }
+@keyframes c-idle { 50% { transform: translateY(-1.3px); } }
+.chr .e-open { transform-origin: 45px 50px; animation: c-blink 4.2s infinite; }
+@keyframes c-blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+.chr .e-happy, .chr .m-happy, .chr .m-oh { display: none; }
+.chr .blush { opacity: .55; }
+.happy .chr .e-happy, .happy .chr .m-happy { display: inline; }
+.happy .chr .e-open, .happy .chr .m-idle { display: none; }
+.happy .chr .blush { opacity: 1; }
+.confused .chr .m-oh { display: inline; }
+.confused .chr .m-idle { display: none; }
+.walking .chr .bodyg { animation: c-bob .32s ease-in-out infinite; }
+.walking .chr .leg.l { animation: c-step .32s ease-in-out infinite; }
+.walking .chr .leg.r { animation: c-step .32s ease-in-out -.16s infinite; }
+@keyframes c-bob { 50% { transform: translateY(-2.6px); } }
+@keyframes c-step { 50% { transform: translateY(-3.4px); } }
+.happy .chr .bodyg { animation: c-hop .42s ease-out 2; }
+@keyframes c-hop { 40% { transform: translateY(-11px); } }
+.confused .chr .head { transform-origin: 45px 72px; animation: c-tilt .55s ease-in-out 2; }
+@keyframes c-tilt { 30% { transform: rotate(-9deg); } 70% { transform: rotate(7deg); } }
+.talk .chr .head { transform-origin: 45px 72px; animation: c-nod .32s ease-in-out 2; }
+@keyframes c-nod { 50% { transform: translateY(1.8px); } }
+
+.stage-bg .door { transform-origin: 64px 124px; transition: transform .3s; }
+.dooropen .stage-bg .door { transform: scaleX(.2); }
+.stage-fg .prod { opacity: 0; transform: translateY(5px); transition: opacity .25s, transform .25s; }
+.sold .stage-fg .prod { opacity: 1; transform: none; }
+.coin {
+  position: absolute; left: 106px; top: 92px; z-index: 6; font-weight: 900; font-size: 15px; color: #E09B00; white-space: nowrap;
+  text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff; animation: c-rise 1.25s ease-out forwards;
+}
+@keyframes c-rise { from { transform: translateY(8px); opacity: 0; } 20% { opacity: 1; } to { transform: translateY(-26px); opacity: 0; } }
+.shop-bubble::after { left: 38%; }
+.fb-why { margin-top: 4px; font-weight: 800; font-size: 16px; }
+.shop-fb .fb-ans { margin-top: 6px; font-size: 16px; line-height: 1.5; }
+.endchr { width: 110px; height: 146px; }
+.endchr .chr { width: 100%; height: 100%; }
+.endchr .chr .e-happy, .endchr .chr .m-happy { display: inline; }
+.endchr .chr .e-open, .endchr .chr .m-idle { display: none; }
+.shop-view { flex: 0 0 auto; }
+.shop-panel { flex: 1 1 auto; max-height: none; }
+.actor.cust { bottom: 37px; }
+/* 말풍선은 얼굴을 가리지 않게 작게 */
+.shop-bubble { top: calc(46px + env(safe-area-inset-top)); left: 10px; right: 10px; padding: 7px 38px 8px 12px; border-width: 2.5px; border-radius: 16px; }
+.shop-bubble .jp { font-size: 19px; line-height: 1.28; }
+.shop-bubble small { font-size: 12.5px; display: inline; }
+.shop-bubble .mean { display: block; }
+.shop-bubble .peek { margin-left: 8px; font-size: 12.5px; }
+.shop-bubble .spk2 { top: 7px; right: 10px; font-size: 19px; }

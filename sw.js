@@ -2,8 +2,8 @@
  * - 화면·내용 파일: 항상 서버에 새것이 있는지 확인하고(브라우저 임시 저장을 믿지 않는다), 인터넷이 없을 때만 저장본을 쓴다.
  *   깃허브 페이지는 파일을 10분간 예전 것으로 내줄 수 있어서, 확인 없이 받으면 새 단원이 늦게 보인다.
  * - 음성 파일: 이름이 내용에 따라 정해지므로 한 번 받으면 바뀌지 않는다. 저장본을 먼저 쓴다. */
-const CACHE = 'bn-v11';
-const FILES = ['./', 'index.html', 'style.css', 'ver.js', 'data.js', 'app.js', 'scenes.js', 'game.js', 'vendor/three.min.js', 'audio/index.js', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'bn-v12';
+const FILES = ['./', 'index.html', 'style.css', 'ver.js', 'data.js', 'app.js', 'scenes.js', 'game.js', 'audio/index.js', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE)
