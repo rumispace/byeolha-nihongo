@@ -1,6 +1,6 @@
 /* 오프라인에서도 열리게 한다.
  * 네트워크 우선: 새 레슨을 올리면 바로 반영되고, 인터넷이 없을 때만 저장본을 쓴다. */
-const CACHE = 'bn-v4';
+const CACHE = 'bn-v5';
 const FILES = ['./', 'index.html', 'style.css', 'data.js', 'app.js', 'audio/index.js', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
