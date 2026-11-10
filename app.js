@@ -432,7 +432,7 @@ function renderIntro(step) {
     <button class="card intro ${isKana ? 'kana' : ''} ${kind}" id="play">
       ${ribbons.length ? `<span class="ribbons">${ribbons.map(r => `<i class="ribbon ${r[0]}">${r[1]}</i>`).join('')}</span>` : ''}
       ${it.em ? `<span class="pic">${it.em}</span>` : ''}
-      <span class="jp ${isKana ? 'huge' : it.g === 'phrase' ? 'lg' : 'xxl'}">${it.jp}</span>
+      <span class="jp ${isKana ? 'huge' : it.g !== 'phrase' ? 'xxl' : it.jp.length > 13 ? 'lg sm' : it.jp.length > 9 ? 'lg md' : 'lg'}">${it.jp}</span>
       ${!isKana && it.kana !== it.jp ? `<span class="jp furi">${it.kana}</span>` : ''}
       <span class="pron">${it.pron}</span>
       ${isKana ? '' : `<span class="mean">${it.g === 'num' ? '' : it.ko}</span>`}
@@ -582,19 +582,6 @@ function finishLesson() {
   document.getElementById('home').onclick = renderHome;
 }
 
-/* ───────── 디자인 시안 ───────── */
-const THEMES = [
-  { id: 'indigo', name: 'A 쪽빛', sw: ['#EEF2FB', '#4257E8', '#FFC94D'] },
-  { id: 'mint', name: 'B 민트 약국', sw: ['#E9F7F1', '#10B981', '#0E3A32'] },
-  { id: 'white', name: 'C 흰색 + 주홍', sw: ['#FFFFFF', '#F2542D', '#15171C'] },
-  { id: 'ivory', name: '기존 아이보리', sw: ['#FFF8EC', '#FF7A45', '#22305A'] },
-];
-const curTheme = () => document.documentElement.getAttribute('data-theme') || 'ivory';
-function setTheme(id) {
-  document.documentElement.setAttribute('data-theme', id);
-  try { localStorage.setItem('bn_theme', id); } catch (e) { /* 무시 */ }
-}
-
 /* ───────── 홈 ───────── */
 function renderHome() {
   if (needReload) { const v = needReload; needReload = false; reloadOnce(v); }
@@ -714,12 +701,6 @@ function viewSet(el) {
       ${row('sfx', '효과음', '정답·오답 소리')}
     </section>
     <section class="panel">
-      <b>디자인 시안 고르기</b><small>눌러서 바로 바꿔 보세요. 마음에 드는 것을 알려 주시면 그것으로 확정합니다.</small>
-      <div class="themes">
-        ${THEMES.map(t => `<button data-theme-pick="${t.id}" class="${curTheme() === t.id ? 'on' : ''}"><span class="sw3">${t.sw.map(c => `<i style="background:${c}"></i>`).join('')}</span>${t.name}</button>`).join('')}
-      </div>
-    </section>
-    <section class="panel">
       <button class="btn ghost" id="test">🔊 일본어 음성 시험</button>
       ${noVoice ? '<p class="note">이 브라우저는 음성 읽기를 지원하지 않아요.</p>' : '<p class="note">소리가 안 나면 무음 스위치와 음량을 확인하세요.</p>'}
     </section>
@@ -729,7 +710,6 @@ function viewSet(el) {
     </section>`;
   el.querySelectorAll('input[data-k]').forEach(i => i.onchange = () => { S.set[i.dataset.k] = i.checked; save(); });
   document.getElementById('test').onclick = () => speak('いらっしゃいませ');
-  el.querySelectorAll('[data-theme-pick]').forEach(b => b.onclick = () => { setTheme(b.dataset.themePick); renderHome(); });
   document.getElementById('reset').onclick = () => {
     if (!confirm('진도와 연속 학습일을 모두 지울까요? 되돌릴 수 없습니다.')) return;
     S = JSON.parse(JSON.stringify(DEF)); save(); renderHome();

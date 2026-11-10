@@ -19,28 +19,13 @@
   --soft: #EFEADF; --dis: #E5E0D6; --dis-d: #D2CCBF; --dis-t: #A9A396;
   --hero-bg: #FFFFFF; --hero-ink: var(--ink);
 }
-/* ───────── 디자인 시안 ─────────
- * 설정에서 고른 시안이 <html data-theme="..."> 로 들어온다. 확정되면 그 값을 :root 로 옮기고 나머지는 지운다. */
-[data-theme="indigo"] {
+/* 확정 디자인: 쪽빛 (2026-11-10 사용자 선택). 위 기본값을 덮어쓴다 */
+:root {
   --bg: #EEF2FB; --ink: #1A2250; --sub: #7682A8; --line: #D9E0F2;
   --main: #4257E8; --main-d: #2F3FBD;
   --soft: #E6EBF7; --dis: #DFE4F1; --dis-d: #C7CFE4; --dis-t: #9AA4C2;
   --sel: #FFF1DD; --sel-line: #FF9F1C;
   --hero-bg: #4257E8; --hero-ink: #FFFFFF;
-}
-[data-theme="mint"] {
-  --bg: #E9F7F1; --ink: #0E3A32; --sub: #5F8279; --line: #CBE6DB;
-  --main: #10B981; --main-d: #0A8F63;
-  --soft: #DDF0E8; --dis: #D7E9E1; --dis-d: #BDD6CB; --dis-t: #8FAAA0;
-  --sel: #E4EEFF; --sel-line: #5B8DEF;
-  --hero-bg: #0E3A32; --hero-ink: #FFFFFF;
-}
-[data-theme="white"] {
-  --bg: #FFFFFF; --ink: #15171C; --sub: #6B7280; --line: #E3E5EA;
-  --main: #F2542D; --main-d: #C63D1B;
-  --soft: #F1F2F5; --dis: #ECEEF1; --dis-d: #D5D8DE; --dis-t: #A1A6B0;
-  --sel: #EAF1FF; --sel-line: #3B82F6;
-  --hero-bg: #15171C; --hero-ink: #FFFFFF;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; height: 100%; background: var(--bg); }
@@ -300,14 +285,12 @@ small { display: block; font-size: .78em; color: var(--sub); font-weight: 500; }
 .tip.sales { background: #FFE6E2; font-weight: 700; }
 .brow.must { border-color: var(--gold-d); background: #FFFBEB; }
 
-/* 시안 공통: 머리 카드를 색으로 채우고 버튼은 금색으로 */
+/* 머리 카드는 색으로 채우고 버튼은 금색으로 */
 .hero { background: var(--hero-bg); color: var(--hero-ink); }
-[data-theme]:not([data-theme="ivory"]) .hero { border-color: transparent; }
-[data-theme]:not([data-theme="ivory"]) .hero .btn { background: var(--gold); color: #5A3D00; box-shadow: 0 4px 0 var(--gold-d); }
-[data-theme]:not([data-theme="ivory"]) .hero .btn small { color: #7A5200; }
-[data-theme]:not([data-theme="ivory"]) .hero .link { color: #FFFFFF; }
-[data-theme="white"] .page, [data-theme="white"] .lbody { background: #F6F7F9; }
-[data-theme="white"] .lfoot { background: #FFFFFF; }
+.hero { border-color: transparent; }
+.hero .btn { background: var(--gold); color: #5A3D00; box-shadow: 0 4px 0 var(--gold-d); }
+.hero .btn small { color: #7A5200; }
+.hero .link { color: #FFFFFF; }
 
 /* ───────── 큼직하게 ─────────
  * 배우는 사람이 한눈에 읽도록 글자와 누르는 곳을 키운다 */
@@ -350,9 +333,8 @@ body { font-size: 17px; }
 .prog { height: 16px; }
 .minispk { font-size: 16px; }
 
-/* 시안 고르기 */
-.themes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-.themes button { border: 3px solid var(--line); border-radius: 16px; padding: 10px; text-align: left; font-weight: 800; background: var(--card); }
-.themes button.on { border-color: var(--main); }
-.themes .sw3 { display: flex; height: 34px; border-radius: 10px; overflow: hidden; margin-bottom: 8px; border: 1px solid rgba(0,0,0,.08); }
-.themes .sw3 i { flex: 1; }
+
+/* 긴 문장은 한 글자만 다음 줄로 떨어지지 않게 크기를 줄이고 줄을 고르게 나눈다 */
+.lg { text-wrap: balance; }
+.lg.md { font-size: 29px; }
+.lg.sm { font-size: 25px; }
