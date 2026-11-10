@@ -350,6 +350,77 @@ const D5 = [
     [['よくならなければ', '요쿠 나라나케레바'], ['病院に', '뵤-인니'], ['行って', '잇테'], ['ください', '쿠다사이']]),
 ];
 
+/* ───────── 판매 꿀팁 ───────── */
+const SALE1 = [
+  ph('p_ichiban', 'こちらが一番人気です', 'こちらが いちばん にんきです', '코치라가 이치방 닌키데스', '이게 제일 인기예요',
+    [['こちらが', '코치라가'], ['一番', '이치방'], ['人気です', '닌키데스']]),
+  ph('p_nihonnokata', '日本の方によく売れています', 'にほんのかたに よく うれています', '니혼노 카타니 요쿠 우레테이마스', '일본 분들이 많이 사 가세요',
+    [['日本の方に', '니혼노 카타니'], ['よく', '요쿠'], ['売れています', '우레테이마스']]),
+  ph('p_otameshi', 'お試しになりますか', 'おためしに なりますか', '오타메시니 나리마스카', '테스트해 보시겠어요?',
+    [['お試しに', '오타메시니'], ['なりますか', '나리마스카']]),
+  ph('p_omiyage', 'お土産にもおすすめです', 'おみやげにも おすすめです', '오미야게니모 오스스메데스', '선물용으로도 추천드려요',
+    [['お土産にも', '오미야게니모'], ['おすすめ', '오스스메'], ['です', '데스']]),
+  ph('p_shashin', '写真を見せてください', 'しゃしんを みせてください', '샤신오 미세테 쿠다사이', '사진을 보여 주세요',
+    [['写真を', '샤신오'], ['見せて', '미세테'], ['ください', '쿠다사이']]),
+];
+const SALE2 = [
+  ph('p_set', 'セットがお得です', 'セットが おとくです', '셋토가 오토쿠데스', '세트가 이득이에요',
+    [['セットが', '셋토가'], ['お得です', '오토쿠데스']]),
+  ph('p_hokani_hitsuyo', 'ほかに必要なものはございますか', 'ほかに ひつような ものは ございますか', '호카니 히츠요-나 모노와 고자이마스카', '더 필요한 것 있으세요?',
+    [['ほかに', '호카니'], ['必要なものは', '히츠요-나 모노와'], ['ございますか', '고자이마스카']]),
+  ph('p_yakkyokudake', '薬局でしか買えません', 'やっきょくでしか かえません', '얏쿄쿠데시카 카에마셍', '약국에서만 살 수 있어요',
+    [['薬局でしか', '얏쿄쿠데시카'], ['買えません', '카에마셍']]),
+  ph('p_goran', 'ゆっくりご覧ください', 'ゆっくり ごらんください', '육쿠리 고란 쿠다사이', '천천히 둘러보세요',
+    [['ゆっくり', '육쿠리'], ['ご覧', '고란'], ['ください', '쿠다사이']]),
+  ph('p_zaiko', '在庫を確認します', 'ざいこを かくにんします', '자이코오 카쿠닌시마스', '재고를 확인해 보겠습니다',
+    [['在庫を', '자이코오'], ['確認します', '카쿠닌시마스']]),
+];
+
+/* ───────── 리얼 일본어 ─────────
+ * 손님이 실제로 쓰는 말. 교과서에는 잘 안 나오지만 카운터에서는 매일 듣는다. */
+const REAL1 = [
+  ph('r_naruhodo', 'なるほど', 'なるほど', '나루호도', '아하, 그렇군요'),
+  ph('r_yabai', 'やばい', 'やばい', '야바이', '대박 / 큰일이다'),
+  ph('r_sugoi', 'すごい', 'すごい', '스고이', '우와, 대단해요'),
+  ph('r_majide', 'マジで？', 'まじで', '마지데', '진짜요?'),
+  ph('r_meccha', 'めっちゃ安い', 'めっちゃ やすい', '멧챠 야스이', '엄청 싸다'),
+  ph('r_hee', 'へえ', 'へえ', '헤-', '오, 그래요?'),
+];
+const REAL2 = [
+  ph('r_korekudasai', 'これください', 'これください', '코레 쿠다사이', '이거 주세요'),
+  ph('r_daijobu', '大丈夫です', 'だいじょうぶです', '다이죠-부데스', '괜찮아요 (= 필요 없어요)'),
+  ph('r_kangaemasu', 'ちょっと考えます', 'ちょっと かんがえます', '춋토 캉가에마스', '좀 생각해 볼게요'),
+  ph('r_takai', '高い', 'たかい', '타카이', '비싸다'),
+  ph('r_kawaii', 'かわいい', 'かわいい', '카와이-', '귀엽다 / 예쁘다'),
+  ph('r_arimasuka', 'これ、ありますか', 'これ、ありますか', '코레, 아리마스카', '이거 있어요?'),
+];
+const REAL3 = [
+  ph('r_yakkyokucosme', '薬局コスメ', 'やっきょくコスメ', '얏쿄쿠 코스메', '약국 화장품'),
+  ph('r_kami', '神アイテム', 'かみアイテム', '카미 아이테무', '갓템 (인생템)'),
+  ph('r_sukusho', 'スクショ', 'スクショ', '스쿠쇼', '스크린샷'),
+  ph('r_urikire', '売り切れ', 'うりきれ', '우리키레', '품절'),
+  ph('r_wadai', 'SNSで話題', 'エスエヌエスで わだい', '에스에누에스데 와다이', 'SNS에서 화제'),
+  ph('r_hadaniau', '肌に合う', 'はだに あう', '하다니 아우', '피부에 맞다'),
+];
+const REAL4 = [
+  ph('p_sounandesune', 'そうなんですね', 'そうなんですね', '소-난데스네', '그러시군요'),
+  ph('p_kashikomari', 'かしこまりました', 'かしこまりました', '카시코마리마시타', '알겠습니다 (정중하게)'),
+  ph('p_mochiron', 'もちろんです', 'もちろんです', '모치론데스', '물론이죠'),
+  ph('p_yokatta', 'よかったです', 'よかったです', '요캇타데스', '다행이에요'),
+  ph('p_urikiredesu', '申し訳ございません、売り切れです', 'もうしわけございません、うりきれです', '모-시와케 고자이마셍, 우리키레데스', '죄송합니다, 품절입니다',
+    [['申し訳ございません', '모-시와케 고자이마셍'], ['売り切れ', '우리키레'], ['です', '데스']]),
+];
+Object.assign(ITEMS.r_naruhodo, { tip: '손님도 약사도 쓰는 맞장구. 손님 설명을 들을 때 "나루호도" 한마디면 대화가 부드러워져요' });
+Object.assign(ITEMS.r_yabai, { tip: '좋을 때도("이 크림 야바이!") 나쁠 때도 씁니다. 표정을 보세요. 약사가 손님에게 쓰는 말은 아니에요' });
+Object.assign(ITEMS.r_majide, { tip: '가격이나 효과에 놀랐을 때 나오는 말. 친구끼리 쓰는 말투예요' });
+Object.assign(ITEMS.r_meccha, { tip: '"멧챠"는 "엄청". 멧챠 야스이(엄청 싸다), 멧챠 이이(엄청 좋다)' });
+Object.assign(ITEMS.r_daijobu, { tip: '함정 표현! "봉투 필요하세요?"에 "다이죠-부데스"라고 하면 대부분 "필요 없어요"라는 뜻입니다' });
+Object.assign(ITEMS.r_kangaemasu, { tip: '완곡한 거절일 때가 많아요. 더 권하지 말고 "천천히 둘러보세요"로 받으면 됩니다' });
+Object.assign(ITEMS.r_sukusho, { tip: '일본 손님은 사고 싶은 제품의 스크쇼를 보여 주는 경우가 많아요. 일본 잡지·블로그도 그렇게 사라고 안내합니다' });
+Object.assign(ITEMS.r_kami, { tip: '일본 뷰티 잡지가 한국 약국 제품을 소개할 때 자주 쓰는 말' });
+Object.assign(ITEMS.r_yakkyokucosme, { tip: '올리브영이 아니라 "약국에서만 파는 화장품"을 일본에서는 이렇게 부릅니다' });
+Object.assign(ITEMS.p_sounandesune, { tip: '손님 말에 공손하게 맞장구칠 때. "나루호도"보다 한 단계 정중해요' });
+
 /* ───────── 레슨 ─────────
  * type: kana | word | num | phrase | vocab | price   (vocab = 단어 묶음. ph() 로 만들되 조각 없이)
  * role: 상황극 문제. em=장면 그림, sit=상황 설명, cust=손님 대사, ans=정답 문장 id
@@ -501,6 +572,36 @@ const LESSONS = [
       { em: '💊', sit: '약을 권하기 전에 함께 먹는 약이 있는지 확인합니다.', ans: 'p_hokani' },
     ],
   },
+  {
+    id: 'sale1', track: 'pharm', unit: '판매 꿀팁', type: 'phrase', title: '권하는 말', sub: '이게 제일 인기예요 · 사진을 보여 주세요',
+    items: SALE1, today: 'p_ichiban',
+    role: [
+      { em: '📱', sit: '손님이 제품 이름을 설명하는데 잘 모르겠습니다.', ans: 'p_shashin' },
+      { em: '🤔', cust: { jp: 'どれがいいですか', pron: '도레가 이-데스카', ko: '어느 게 좋아요?' }, ans: 'p_ichiban' },
+      { em: '🎁', sit: '손님이 친구 선물을 고르고 있습니다.', ans: 'p_omiyage' },
+    ],
+  },
+  {
+    id: 'sale2', track: 'pharm', unit: '판매 꿀팁', type: 'phrase', title: '한 번 더 권하는 말', sub: '세트가 이득이에요 · 더 필요한 것 있으세요?',
+    items: SALE2, today: 'p_hokani_hitsuyo',
+    role: [
+      { em: '🧾', sit: '계산 직전입니다. 한 번 더 물어보려면?', ans: 'p_hokani_hitsuyo' },
+      { em: '🛒', cust: { jp: 'これ、オリーブヤングにもありますか', pron: '코레, 오리-부 양구니모 아리마스카', ko: '이거 올리브영에도 있어요?' }, sit: '약국 전용 제품입니다.', ans: 'p_yakkyokudake' },
+      { em: '📦', cust: { jp: 'これ、ありますか', pron: '코레, 아리마스카', ko: '이거 있어요?' }, sit: '창고를 봐야 알 수 있습니다.', ans: 'p_zaiko' },
+    ],
+  },
+  { id: 'real1', track: 'pharm', unit: '리얼 일본어', type: 'vocab', title: '손님의 감탄사', sub: '나루호도 · 야바이 · 스고이 · 마지데', items: REAL1 },
+  { id: 'real2', track: 'pharm', unit: '리얼 일본어', type: 'vocab', title: '쇼핑할 때 손님 말', sub: '이거 주세요 · 괜찮아요(=필요 없어요)', items: REAL2 },
+  { id: 'real3', track: 'pharm', unit: '리얼 일본어', type: 'vocab', title: '일본 손님의 쇼핑 용어', sub: '약국 코스메 · 갓템 · 스크쇼 · 품절', items: REAL3 },
+  {
+    id: 'real4', track: 'pharm', unit: '리얼 일본어', type: 'phrase', title: '약사의 맞장구', sub: '그러시군요 · 알겠습니다 · 품절입니다',
+    items: REAL4, today: 'p_sounandesune',
+    role: [
+      { em: '💬', cust: { jp: '昨日、施術を受けたんです', pron: '키노-, 시쥬츠오 우케탄데스', ko: '어제 시술을 받았거든요' }, ans: 'p_sounandesune' },
+      { em: '🙆‍♀️', cust: { jp: 'これ、3つください', pron: '코레, 밋츠 쿠다사이', ko: '이거 세 개 주세요' }, ans: 'p_kashikomari' },
+      { em: '📭', sit: '손님이 찾는 제품이 다 팔렸습니다.', ans: 'p_urikiredesu' },
+    ],
+  },
 ];
 
 const TRACKS = {
@@ -528,11 +629,43 @@ const EMOJI = {
   v_kazegusuri: '🤧', v_itamidome: '💊', v_ichoyaku: '🫃', v_megusuri: '👁️', v_nurigusuri: '🧴', v_shippu: '🩹',
   p_1nichi3kai: '🕒', p_shokugo: '🍚', p_2jo: '💊', p_nerumae: '🌙', p_mizude: '🥛',
   p_nemuku: '😴', p_osake: '🍺', p_ninshin: '🤰', p_hokani: '💊', p_yokunara: '🏥',
+  p_ichiban: '🏆', p_nihonnokata: '🇯🇵', p_otameshi: '🧪', p_omiyage: '🎁', p_shashin: '📱',
+  p_set: '🎀', p_hokani_hitsuyo: '🛒', p_yakkyokudake: '⚕️', p_goran: '👀', p_zaiko: '📦',
+  r_naruhodo: '💡', r_yabai: '😳', r_sugoi: '🤩', r_majide: '😲', r_meccha: '🤑', r_hee: '🙂',
+  r_korekudasai: '👉', r_daijobu: '🙅‍♀️', r_kangaemasu: '🤔', r_takai: '💸', r_kawaii: '🥰', r_arimasuka: '📱',
+  r_yakkyokucosme: '🧴', r_kami: '👑', r_sukusho: '📱', r_urikire: '📭', r_wadai: '🔥', r_hadaniau: '👌',
+  p_sounandesune: '💬', p_kashikomari: '🙆‍♀️', p_mochiron: '👍', p_yokatta: '😊', p_urikiredesu: '📭',
   'w_くすり': '💊', 'w_あたま': '🧠', 'w_おなか': '🫃', 'w_みみ': '👂', 'w_くち': '👄', 'w_て': '✋',
   'w_ねつ': '🌡️', 'w_せき': '😷', 'w_いたい': '😖', 'w_かゆい': '🦟', 'w_はれ': '🤕', 'w_しわ': '〰️',
   'w_すし': '🍣', 'w_かお': '🙂', 'w_えき': '🚉', 'w_しお': '🧂', 'w_あかい': '🔴', 'w_ここ': '📍',
 };
 Object.keys(EMOJI).forEach(id => { if (ITEMS[id]) ITEMS[id].em = EMOJI[id]; });
+
+/* ───────── 강조 표시 ─────────
+ * MUST  : "꼭 외우세요!" — 이것만 알아도 응대가 되는 문장. 연습에서도 더 자주 나온다.
+ * SALES : "판매 꿀팁 표현!" — 문장 id → 언제 쓰면 좋은지 한 줄.
+ * CUST  : 손님이 하는 말. 말할 필요는 없고 알아듣기만 하면 된다. */
+const MUST = ['p_irasshai', 'p_arigato', 'p_shosho', 'p_mouichido', 'p_won', 'p_card', 'p_passport',
+  'p_osusume', 'p_shijutsu', 'p_1nichi2kai', 'p_dousare', 'p_hokani', 'p_byoin', 'p_shashin', 'r_daijobu', 'p_kashikomari'];
+const SALES = {
+  p_osusume: '뭘 살지 망설이는 손님에게. 이 한마디가 구매를 결정합니다',
+  p_ninki: '"다들 사 가는 제품"이라는 말은 어느 나라 손님에게나 통합니다',
+  p_ichiban: '고민하는 손님에게 선택지를 하나로 줄여 주는 말',
+  p_nihonnokata: '일본 손님은 "같은 일본인이 많이 산다"는 말에 안심합니다',
+  p_otameshi: '테스터가 있으면 먼저 권하세요. 써 본 손님이 삽니다',
+  p_omiyage: '여행 온 손님은 선물도 삽니다. 하나 살 손님이 여러 개를 사게 되는 말',
+  p_shashin: '이름으로 헤매지 말고 사진부터. 일본 손님은 대부분 스크쇼를 갖고 있습니다',
+  p_set: '낱개와 세트가 같이 있을 때',
+  p_hokani_hitsuyo: '계산 직전 마지막 한마디. 잊고 있던 물건이 여기서 나옵니다',
+  p_yakkyokudake: '약국 전용 제품일 때만 쓰세요. 사실이 아니면 쓰면 안 됩니다',
+  p_goran: '부담을 주지 않는 말. "생각해 볼게요"라는 손님에게도 이 말로 받습니다',
+  p_binkan_ok: '시술 후 손님이 가장 걱정하는 부분을 먼저 풀어 주는 말',
+};
+const CUST = ['p_ikura', 'r_yabai', 'r_sugoi', 'r_majide', 'r_meccha', 'r_hee', 'r_korekudasai', 'r_daijobu',
+  'r_kangaemasu', 'r_takai', 'r_kawaii', 'r_arimasuka', 'r_yakkyokucosme', 'r_kami', 'r_sukusho', 'r_urikire', 'r_wadai', 'r_hadaniau'];
+MUST.forEach(id => { if (ITEMS[id]) ITEMS[id].must = true; });
+Object.keys(SALES).forEach(id => { if (ITEMS[id]) ITEMS[id].sales = SALES[id]; });
+CUST.forEach(id => { if (ITEMS[id]) ITEMS[id].cust = true; });
 
 /* 정답·오답 때 뜨는 반응 */
 const REACT = {

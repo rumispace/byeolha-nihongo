@@ -262,3 +262,15 @@ small { display: block; font-size: .78em; color: var(--sub); font-weight: 500; }
 .mode p { margin: 0; font-size: 14px; }
 .mode .btn { margin-top: 10px; padding: 10px 14px; }
 .link { display: block; width: 100%; margin-top: 12px; font-weight: 800; font-size: 14px; color: var(--main-d); text-align: center; }
+
+/* 강조 카드 */
+.ribbons { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin: -10px 0 6px; }
+.ribbon { font-style: normal; font-size: 14px; font-weight: 900; border-radius: 999px; padding: 4px 12px; animation: pop .35s ease-out; }
+.ribbon.must { background: var(--gold); color: #6B4700; }
+.ribbon.sales { background: #FF5D5D; color: #fff; }
+.ribbon.cust { background: var(--ink); color: #fff; }
+.card.intro.must { border-color: var(--gold-d); box-shadow: 0 5px 0 var(--gold-d); background: #FFFBEB; }
+.card.intro.sales { border-color: #E04848; box-shadow: 0 5px 0 #E04848; background: #FFF5F3; }
+.card.intro.cust { border-style: dashed; }
+.tip.sales { background: #FFE6E2; font-weight: 700; }
+.brow.must { border-color: var(--gold-d); background: #FFFBEB; }

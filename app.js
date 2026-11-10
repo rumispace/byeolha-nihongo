@@ -341,7 +341,7 @@ function buildReview() {
 /* 오늘의 연습: 배운 것 전체에서 매번 다르게 뽑는다. 덜 익은 것(상자 번호가 낮은 것)일수록 자주 나온다 */
 function buildPractice() {
   const known = learnedIds();
-  const key = id => Math.pow(Math.random(), 1 + (S.srs[id].box || 0));
+  const key = id => Math.pow(Math.random(), (1 + (S.srs[id].box || 0)) * (ITEMS[id].must ? 0.6 : 1));   // 꼭 외울 문장은 더 자주
   const ids = known.map(id => [key(id), id]).sort((a, b) => b[0] - a[0]).slice(0, 8).map(x => x[1]);
   const steps = ids.map(id => qAny(ITEMS[id], known));
   shuffle(doneRoles()).slice(0, 2).forEach(r => steps.push(qRole(r, known)));
@@ -422,9 +422,15 @@ function renderStep() {
 function renderIntro(step) {
   const it = ITEMS[step.item];
   const isKana = it.g === 'kana';
+  const ribbons = [];
+  if (it.must) ribbons.push(['must', '⭐ 꼭 외우세요!']);
+  if (it.sales) ribbons.push(['sales', '💰 판매 꿀팁 표현!']);
+  if (it.cust) ribbons.push(['cust', '👂 손님이 하는 말']);
+  const kind = ribbons.length ? ribbons[0][0] : '';
   const body = `
-    <p class="qlabel">새로 배워요</p>
-    <button class="card intro ${isKana ? 'kana' : ''}" id="play">
+    <p class="qlabel">${it.must ? '이 문장은 꼭 외우세요' : it.sales ? '매출을 올리는 한마디' : it.cust ? '알아듣기만 하면 돼요' : '새로 배워요'}</p>
+    <button class="card intro ${isKana ? 'kana' : ''} ${kind}" id="play">
+      ${ribbons.length ? `<span class="ribbons">${ribbons.map(r => `<i class="ribbon ${r[0]}">${r[1]}</i>`).join('')}</span>` : ''}
       ${it.em ? `<span class="pic">${it.em}</span>` : ''}
       <span class="jp ${isKana ? 'huge' : it.g === 'phrase' ? 'lg' : 'xxl'}">${it.jp}</span>
       ${!isKana && it.kana !== it.jp ? `<span class="jp furi">${it.kana}</span>` : ''}
@@ -432,6 +438,7 @@ function renderIntro(step) {
       ${isKana ? '' : `<span class="mean">${it.g === 'num' ? '' : it.ko}</span>`}
       <span class="spk">🔊 눌러서 다시 듣기</span>
     </button>
+    ${it.sales ? `<p class="tip sales">💰 ${it.sales}</p>` : ''}
     ${it.tip ? `<p class="tip">💡 ${it.tip}</p>` : ''}`;
   shell(body, `<button class="btn" id="go">알겠어요</button>`);
   document.getElementById('play').onclick = () => speak(it.say);
@@ -662,11 +669,18 @@ function viewBook(el) {
     html += `<h3 class="unit">글자</h3><div class="kgrid">` +
       kanaDone.map(l => l.items.map(id => `<button class="kcell" data-say="${ITEMS[id].say}"><span class="jp">${ITEMS[id].jp}</span><small>${ITEMS[id].pron}</small></button>`).join('')).join('') + `</div>`;
   }
+  const mustDone = phDone.reduce((x, l) => x.concat((l.items || []).filter(id => ITEMS[id].must)), []);
+  if (mustDone.length) {
+    html += `<h3 class="unit">⭐ 꼭 외울 문장</h3>` + mustDone.map(id => {
+      const it = ITEMS[id];
+      return `<button class="brow must" data-say="${it.say}"><span class="jp">${it.jp}</span><small>${it.pron}</small><small class="mean">${it.em ? it.em + ' ' : ''}${it.ko}</small></button>`;
+    }).join('');
+  }
   phDone.forEach(l => {
     html += `<h3 class="unit">${l.unit} · ${l.title}</h3>` + l.items.map(id => {
       const it = ITEMS[id];
       return `<button class="brow" data-say="${it.say}">
-        <span class="jp">${it.jp}</span><small>${it.pron}</small><small class="mean">${it.em ? it.em + ' ' : ''}${it.ko}</small>
+        <span class="jp">${it.jp}</span><small>${it.pron}</small><small class="mean">${it.must ? '⭐ ' : ''}${it.sales ? '💰 ' : ''}${it.em ? it.em + ' ' : ''}${it.ko}</small>
         ${it.g === 'phrase' && !it.ok ? '<i class="badge">검수 전</i>' : ''}</button>`;
     }).join('');
   });
