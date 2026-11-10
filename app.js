@@ -555,7 +555,7 @@ function finishLesson() {
   sess = null;
   sfx('win');
   app.innerHTML = `
-    <div class="done">
+    <div class="finish">
       <div class="mascot big">🦅</div>
       <h1>${L.doneTitle || '레슨 완료!'}</h1>
       <div class="stats">
