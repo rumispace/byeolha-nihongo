@@ -201,6 +201,8 @@ function setMood(el, mood, emote) {
   if (em) { em.textContent = emote || ''; em.classList.toggle('on', !!emote); }
 }
 async function walkTo(el, x, ms) {
+  // 모션을 줄였으면 걷는 시간을 기다리지 않는다
+  if (S.set.motion === false || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) ms = 60;
   el.classList.add('walking');
   el.style.transitionDuration = ms + 'ms';
   el.style.left = x + 'px';
@@ -279,7 +281,7 @@ function bubble(turn) {
   const [jp, p, k] = turn.c;
   el.hidden = false;
   el.innerHTML = `<span class="jp">${jp}</span>${S.set.pron ? `<small>${p}</small>` : ''}` +
-    (k ? `<small class="mean" id="sbk" hidden>${k}</small><i class="peek" id="sbp">뜻 보기</i>` : '') + `<i class="spk2">🔊</i>`;
+    (k ? `<small class="mean" id="sbk" hidden>${k}</small><i class="peek" id="sbp">뜻 보기</i>` : '') + `<i class="spk2">${ICON.spk}</i>`;
   el.onclick = e => {
     const kk = document.getElementById('sbk'), pp = document.getElementById('sbp');
     if (e.target === pp && kk) { kk.hidden = false; pp.remove(); return; }
@@ -363,10 +365,10 @@ function endDay() {
       <div class="stats">
         <div><b>${shopWon(sales)}</b><span>오늘 매출</span></div>
         <div><b>+${gain}</b><span>경험치</span></div>
-        <div><b>🔥 ${S.streak}</b><span>연속 학습일</span></div>
+        <div><b>${S.streak}일</b><span>연속 학습</span></div>
       </div>
       ${miss.length ? `<div class="todaycard"><span class="tag">다시 볼 문장</span>${miss.map(m =>
-    `<button class="say" data-say="${m[0]}"><span class="jp">${m[0]}</span><small>${m[1]}</small><small class="mean">${m[2]} 🔊</small></button>`).join('')}</div>`
+    `<button class="say" data-say="${m[0]}"><span class="jp">${m[0]}</span><small>${m[1]}</small><small class="mean">${m[2]} ${ICON.spk}</small></button>`).join('')}</div>`
       : `<p class="note">한 번도 틀리지 않았어요. 완벽한 응대였습니다.</p>`}
       <p class="note">지금까지 ${S.shop.days}일 영업 · 누적 매출 ${shopWon(S.shop.total)}</p>
       <button class="btn" id="again">하루 더 영업하기</button>
