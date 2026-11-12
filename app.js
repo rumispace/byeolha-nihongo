@@ -7,12 +7,21 @@ const DEF = {
   xp: 0, streak: 0, lastDay: null,
   done: {},            // 레슨 id → 완료 횟수
   srs: {},             // 항목 id → { box, due }
+  days: [],            // 공부한 날짜들(출석 표시용)
   set: { pron: true, slow: false, sfx: true, motion: true },
   tab: 'learn', track: 'kana',
 };
 const SRS_DAYS = [1, 3, 7, 14, 30];
 
 let S = loadState();
+if (!S.days || (!S.days.length && S.lastDay && S.streak)) {
+  S.days = [];
+  const base = S.lastDay ? new Date(S.lastDay + 'T12:00:00') : null;
+  for (let i = (S.streak || 0) - 1; base && i >= 0; i--) {
+    const d = new Date(base); d.setDate(d.getDate() - i);
+    S.days.push(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'));
+  }
+}
 
 /* 선으로 그린 아이콘. 글자색을 따라간다 */
 const svgIcon = d => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
@@ -49,6 +58,23 @@ function dayStr(off) {
   const d = new Date();
   d.setDate(d.getDate() + (off || 0));
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+/* 공부한 날로 기록한다. 오늘 처음이면 true */
+function markStudied() {
+  const t = dayStr(), first = S.lastDay !== t;
+  if (first) { S.streak = S.lastDay === dayStr(-1) ? S.streak + 1 : 1; S.lastDay = t; }
+  S.days = (S.days || []).filter(d => d !== t).concat(t).slice(-120);
+  return first;
+}
+/* 이번 주(월~일) 출석 표시 */
+function weekStrip() {
+  const now = new Date(), dow = (now.getDay() + 6) % 7, t = dayStr();
+  const done = new Set(S.days || []);
+  return '<div class="week">' + ['월', '화', '수', '목', '금', '토', '일'].map((nm, i) => {
+    const d = dayStr(i - dow);
+    const cls = done.has(d) ? 'on' : d === t ? 'now' : i < dow ? 'miss' : '';
+    return `<span class="${cls}"><i>${done.has(d) ? ICON.check : ''}</i>${nm}</span>`;
+  }).join('') + '</div>';
 }
 function curStreak() {
   return (S.lastDay === dayStr() || S.lastDay === dayStr(-1)) ? S.streak : 0;
@@ -158,8 +184,13 @@ function numRead(n) {
 const trackLessons = t => LESSONS.filter(l => l.track === t);
 function unlocked(L) {
   const ls = trackLessons(L.track), i = ls.indexOf(L);
+  if (i === 0) return true;
   // 단원의 첫 레슨은 언제나 열려 있다: 필요한 단원부터 골라 배울 수 있게
-  return i === 0 || !!S.done[ls[i - 1].id] || (!!L.unit && L.unit !== ls[i - 1].unit);
+  if (L.unit && L.unit !== ls[i - 1].unit) return true;
+  // 단어 읽기 레슨은 선택 과정이다. 건너뛰어도 다음 글자 줄이 열린다
+  let j = i - 1;
+  while (j > 0 && ls[j].type === 'word' && L.type !== 'word') j--;
+  return !!S.done[ls[j].id] || !!S.done[ls[i - 1].id];
 }
 const nextIn = t => trackLessons(t).find(l => !S.done[l.id]) || null;
 function recommended() {
@@ -240,7 +271,7 @@ function qShow(it, known) {
   const F = FACES[it.g];
   const big = it.g === 'phrase'
     ? `<div class="prompt-ko">${it.em ? `<i class="em">${it.em}</i>` : ''}${it.ko}</div>`
-    : `<div class="prompt-big jp">${it.jp}</div>`;
+    : `<div class="prompt-big jp ${it.jp.length > 5 ? 'sm' : it.jp.length > 3 ? 'md' : ''}">${it.jp}</div>`;
   return {
     t: 'choice', item: it.id, label: F.label, promptHtml: big,
     opts: options(it, known, F.show), ans: it.id, ansHtml: answerLine(it), sayAfter: it.say,
@@ -356,6 +387,59 @@ function qAny(it, known) {
   if (it.g === 'phrase' && it.parts && Math.random() < 0.35) return qTiles(it, known);
   return Math.random() < 0.5 ? qListen(it, known) : qShow(it, known);
 }
+/* ───────── 오늘의 학습 ─────────
+ * 글자 한 줄 → 그 글자가 들어간 약국 말 → 오늘의 한 문장. data.js 의 DAILY 가 날짜별 내용이다. */
+const dailyLessons = () => LESSONS.filter(l => l.track === 'kana' && l.type === 'kana' && DAILY[l.id]);
+function todayPlan() {
+  const k = dailyLessons().find(l => !S.done[l.id]);
+  if (k) return { kind: 'daily', L: k, D: DAILY[k.id], day: dailyLessons().indexOf(k) + 1 };
+  const p = nextIn('pharm');
+  if (p) return { kind: 'lesson', L: p, day: dailyLessons().length + trackLessons('pharm').filter(l => S.done[l.id]).length + 1 };
+  return { kind: 'practice' };
+}
+function nextTease() {
+  const n = todayPlan();
+  if (n.kind === 'daily') return `<br>다음에 배울 글자 <b class="jp">${n.L.sub}</b>`;
+  if (n.kind === 'lesson') return `<br>다음 레슨 <b>${n.L.title}</b>`;
+  return '';
+}
+function buildDaily(L, D) {
+  const ls = trackLessons('kana'), known = [];
+  ls.slice(0, ls.indexOf(L) + 1).forEach(l => (l.items || []).forEach(id => known.push(id)));
+  const chars = L.items.map(id => ITEMS[id]), words = D.words.map(id => ITEMS[id]), ph = ITEMS[D.phrase];
+  const hl = chars.map(c => c.jp);
+  const steps = [{ t: 'title', no: '1 / 3', h: '오늘의 글자', sub: '소리를 듣고 모양을 익혀요', chips: hl }];
+  chars.forEach((it, i) => {
+    steps.push({ t: 'intro', item: it.id });
+    if (i % 2 === 1 || i === chars.length - 1) shuffle(chars.slice(i % 2 === 1 ? i - 1 : i, i + 1)).forEach(x => steps.push(qListen(x, known)));
+  });
+  shuffle(chars).slice(0, 2).forEach(it => steps.push(qShow(it, known)));
+  steps.push(qMatch(chars));
+
+  const wordKnown = known.concat(Object.keys(ITEMS).filter(id => ITEMS[id].g === 'word'));
+  steps.push({ t: 'title', no: '2 / 3', h: '약국에서 쓰는 말', sub: '방금 배운 글자가 들어 있어요', chips: words.map(w => w.jp) });
+  words.forEach(w => steps.push({ t: 'intro', item: w.id, hl }));
+  shuffle(words).forEach(w => steps.push(qShow(w, wordKnown)));
+
+  steps.push({ t: 'title', no: '3 / 3', h: '오늘의 한 문장', sub: '이 문장은 통째로 외워요' });
+  steps.push({ t: 'intro', item: ph.id });
+  steps.push(qListen(ph, Object.keys(ITEMS)));
+  if (ph.parts) steps.push(qTiles(ph, Object.keys(ITEMS)));
+  return steps;
+}
+function startToday() {
+  const plan = todayPlan();
+  if (plan.kind === 'daily') {
+    const L = plan.L, D = plan.D;
+    return startLesson({
+      id: 'daily', base: L, title: L.title, doneTitle: '오늘의 학습 완료!', today: D.phrase,
+      items: L.items.concat(D.words, [D.phrase]), build: () => buildDaily(L, D),
+    });
+  }
+  if (plan.kind === 'lesson') return startLesson(plan.L);
+  startLesson(MODES.practice);
+}
+
 function buildReview() {
   const known = learnedIds();
   return shuffle(dueItems()).slice(0, 12).map(id => qAny(ITEMS[id], known));
@@ -436,14 +520,28 @@ function feedback(ok, step) {
 
 function renderStep() {
   const step = sess.steps[sess.i];
+  if (step.t === 'title') return renderTitle(step);
   if (step.t === 'intro') return renderIntro(step);
   if (step.t === 'choice') return renderChoice(step);
   if (step.t === 'tiles') return renderTiles(step);
   if (step.t === 'match') return renderMatch(step);
 }
 
+function renderTitle(step) {
+  shell(`
+    <div class="chapter">
+      <p class="eyebrow">${step.no}</p>
+      <h2>${step.h}</h2>
+      <p>${step.sub}</p>
+      ${step.chips ? `<div class="chipsrow jp">${step.chips.map(c => `<span>${c}</span>`).join('')}</div>` : ''}
+    </div>`, `<button class="btn" id="go">시작</button>`);
+  document.getElementById('go').onclick = () => { sess.cleared++; sess.i++; renderStep(); };
+}
+
 function renderIntro(step) {
   const it = ITEMS[step.item];
+  // 오늘 배운 글자는 단어 안에서 색으로 짚어 준다
+  const jpHtml = step.hl ? [...it.jp].map(ch => step.hl.includes(ch) ? `<mark>${ch}</mark>` : ch).join('') : it.jp;
   const isKana = it.g === 'kana';
   const ribbons = [];
   if (it.must) ribbons.push(['must', '⭐ 꼭 외우세요!']);
@@ -455,7 +553,7 @@ function renderIntro(step) {
     <button class="card intro ${isKana ? 'kana' : ''} ${kind}" id="play">
       ${ribbons.length ? `<span class="ribbons">${ribbons.map(r => `<i class="ribbon ${r[0]}">${r[1]}</i>`).join('')}</span>` : ''}
       ${it.em ? `<span class="pic">${it.em}</span>` : ''}
-      <span class="jp ${isKana ? 'huge' : it.g !== 'phrase' ? 'xxl' : it.jp.length > 13 ? 'lg sm' : it.jp.length > 9 ? 'lg md' : 'lg'}">${it.jp}</span>
+      <span class="jp ${isKana ? 'huge' : it.g !== 'phrase' ? (it.jp.length > 6 ? 'lg' : it.jp.length > 4 ? 'xl2' : 'xxl') : it.jp.length > 13 ? 'lg sm' : it.jp.length > 9 ? 'lg md' : 'lg'}">${jpHtml}</span>
       ${!isKana && it.kana !== it.jp ? `<span class="jp furi">${it.kana}</span>` : ''}
       <span class="pron">${it.pron}</span>
       ${isKana ? '' : `<span class="mean">${it.g === 'num' ? '' : it.ko}</span>`}
@@ -566,17 +664,15 @@ function renderMatch(step) {
 
 function finishLesson() {
   const L = sess.L;
-  const isReview = !!L.build;   // 복습·연습은 레슨 진도에 넣지 않는다
+  const isReview = !!L.build && !L.base;   // 복습·연습은 레슨 진도에 넣지 않는다. 오늘의 학습(base 있음)은 넣는다
   Object.keys(sess.graded).forEach(id => grade(id, sess.graded[id]));
   // 소개만 하고 문제로 안 나온 항목도 내일 복습에 올린다
   if (!isReview) (L.items || []).forEach(id => { if (!S.srs[id]) grade(id, true); });
 
   const gain = 10 + (sess.wrong === 0 ? 5 : 0);
   S.xp += gain;
-  if (!isReview) S.done[L.id] = (S.done[L.id] || 0) + 1;
-  const t = dayStr();
-  const firstToday = S.lastDay !== t;
-  if (firstToday) { S.streak = S.lastDay === dayStr(-1) ? S.streak + 1 : 1; S.lastDay = t; }
+  if (!isReview) { const id = (L.base || L).id; S.done[id] = (S.done[id] || 0) + 1; }
+  const firstToday = markStudied();
   save();
 
   const asked = sess.steps.filter(s => s.t !== 'intro' && s.t !== 'match').length;
@@ -593,7 +689,8 @@ function finishLesson() {
         <div><b>${acc}%</b><span>정확도</span></div>
         <div><b>${S.streak}일</b><span>연속 학습</span></div>
       </div>
-      ${firstToday ? `<p class="note">오늘 목표를 달성했어요.</p>` : ''}
+      ${weekStrip()}
+      <p class="note">${firstToday ? `오늘 목표 달성 · 연속 ${S.streak}일째` : `연속 ${S.streak}일째`}${nextTease()}</p>
       ${tp ? `
       <div class="todaycard">
         <span class="tag">오늘 카운터에서 한 번 써 보기</span>
@@ -631,29 +728,44 @@ function renderHome() {
 }
 
 function viewLearn(el) {
-  const rec = recommended();
-  const total = LESSONS.length, doneN = LESSONS.filter(l => S.done[l.id]).length;
+  const plan = todayPlan(), streak = curStreak(), done = doneToday();
+  let title, sub, foot;
+  if (plan.kind === 'daily') {
+    title = `<h2 class="jp">${plan.L.sub}</h2>`;
+    sub = `+ 약국에서 쓰는 말 <b class="jp">${plan.D.words.map(id => ITEMS[id].jp).join(' · ')}</b>`;
+    foot = `약 6분 · 글자 ${plan.L.items.length}개 + 약국 말 ${plan.D.words.length + 1}개`;
+  } else if (plan.kind === 'lesson') {
+    title = `<h2>${plan.L.title}</h2>`;
+    sub = `${plan.L.unit || TRACKS[plan.L.track].name} · ${plan.L.sub}`;
+    foot = '약 5분';
+  } else {
+    title = `<h2>오늘의 연습</h2>`;
+    sub = '준비된 과정을 모두 마쳤어요. 배운 것에서 매일 다른 문제가 나옵니다.';
+    foot = '약 5분';
+  }
+  const goal = [3, 7, 14, 30, 50, 100, 200, 365].find(m => m > streak);
+  const line = done ? `오늘 학습 완료 · 연속 ${streak}일째`
+    : streak ? `연속 ${streak}일 · 오늘 하면 ${streak + 1}일째` : '오늘 시작하면 연속 학습 1일째';
+  el.innerHTML = `
+    <section class="today">
+      ${weekStrip()}
+      <p class="streakline ${done ? 'ok' : ''}">${line}${goal ? `<small>${goal}일 연속까지 ${goal - streak}일 남았어요</small>` : ''}</p>
+      <div class="todaybox">
+        <p class="eyebrow">${plan.day ? `DAY ${plan.day}` : '오늘의 학습'}</p>
+        ${title}
+        <p class="herosub">${sub}</p>
+      </div>
+      <button class="btn primary" id="go">${done ? '하나 더 학습하기' : '오늘의 학습 시작!'}</button>
+      <p class="note">${foot}</p>
+    </section>`;
+  document.getElementById('go').onclick = startToday;
+}
+
+/* 전체 과정: 기록 탭에서 원하는 레슨을 골라 할 수 있다 */
+function courseHTML() {
   const ls = trackLessons(S.track);
   let lastUnit = null;
-  const hero = rec ? `
-      <p class="eyebrow">오늘의 학습</p>
-      <h2 class="${rec.type === 'kana' ? 'jp' : ''}">${rec.title}</h2>
-      <p class="herosub">${TRACKS[rec.track].name} · <span class="${rec.type === 'kana' ? 'jp' : ''}">${rec.sub}</span></p>
-      <div class="meta"><span><b>약 5분</b>예상 시간</span><span><b>${doneN} / ${total}</b>학습 단계</span><span><b>${curStreak()}일</b>연속 학습</span></div>
-      <button class="btn primary" id="rec">${ICON.play}<span>${doneToday() ? '하나 더 학습하기' : '학습 시작'}</span></button>
-      ${canPractice() ? `<button class="link" id="prac">배운 것으로 오늘의 연습 하기</button>` : ''}` : `
-      <p class="eyebrow">오늘의 학습</p>
-      <h2>오늘의 연습</h2>
-      <p class="herosub">준비된 레슨을 모두 마쳤어요. 배운 것에서 매일 다른 문제가 나옵니다.</p>
-      <div class="meta"><span><b>약 5분</b>예상 시간</span><span><b>${doneN} / ${total}</b>학습 단계</span><span><b>${curStreak()}일</b>연속 학습</span></div>
-      <button class="btn primary" id="prac">${ICON.play}<span>연습 시작</span></button>`;
-  el.innerHTML = `
-    <section class="hero">${hero}</section>
-    <button class="shopcard" id="shopgo">
-      <span class="st"><b>약국 영업</b><small>손님이 말을 걸어요. 일본어로 응대해 보세요</small></span>
-      <span class="sgo">${ICON.chev}</span>
-    </button>
-    <h3 class="sect">전체 과정</h3>
+  return `
     <div class="seg" role="tablist">
       ${Object.keys(TRACKS).map(k => `<button class="${S.track === k ? 'on' : ''}" data-track="${k}" role="tab" aria-selected="${S.track === k}">${TRACKS[k].name}<small>${TRACKS[k].desc}</small></button>`).join('')}
     </div>
@@ -670,12 +782,6 @@ function viewLearn(el) {
   }).join('')}
       <p class="soon">다음 단원은 준비 중이에요.</p>
     </div>`;
-  if (rec) document.getElementById('rec').onclick = () => startLesson(rec);
-  document.getElementById('shopgo').onclick = () => startShop();
-  const prac = document.getElementById('prac');
-  if (prac) prac.onclick = () => startLesson(MODES.practice);
-  el.querySelectorAll('.seg button').forEach(b => b.onclick = () => { S.track = b.dataset.track; save(); renderHome(); });
-  el.querySelectorAll('.node').forEach(b => b.onclick = () => startLesson(LESSONS.find(l => l.id === b.dataset.id)));
 }
 
 function viewReview(el) {
@@ -687,12 +793,17 @@ function viewReview(el) {
   el.innerHTML = `
     <h2 class="ptitle">복습</h2>
     <p class="note">배운 항목 ${total}개 · 매일 조금씩 다시 만나야 입에 붙어요.</p>
+    <button class="shopcard" id="shopgo">
+      <span class="st"><b>약국 영업</b><small>손님이 말을 걸어요. 일본어로 응대해 보세요</small></span>
+      <span class="sgo">${ICON.chev}</span>
+    </button>
     ${card('01', '오늘의 연습', '배운 것 전체에서 매일 다른 문제. 덜 익은 것이 더 자주 나와요.',
     canPractice() ? `<button class="btn" data-mode="practice">시작<small>약 10문제</small></button>` : `<p class="note">레슨을 하나 마치면 열려요.</p>`)}
     ${card('02', '상황극 연습', '이럴 때 뭐라고 할까요? 손님 상황만 모았어요.',
     roles >= 3 ? `<button class="btn" data-mode="roles">시작<small>${Math.min(roles, 8)}문제</small></button>` : `<p class="note">약국 회화 레슨을 2개쯤 마치면 열려요.</p>`)}
     ${card('03', '간격 복습', due ? `오늘 다시 볼 것이 <b>${due}개</b> 있어요.` : '틀린 것은 내일, 맞힌 것은 며칠 뒤에 다시 나와요.',
     due ? `<button class="btn" data-mode="review">시작<small>${Math.min(due, 12)}문제</small></button>` : `<p class="note">오늘 복습할 것은 없어요.</p>`)}`;
+  document.getElementById('shopgo').onclick = () => startShop();
   el.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => startLesson(MODES[b.dataset.mode]));
 }
 
@@ -702,7 +813,19 @@ function viewBook(el) {
   const doneN = LESSONS.filter(l => S.done[l.id]).length;
   let html = `<h2 class="ptitle">기록</h2>
     <div class="stats rec"><div><b>${curStreak()}일</b><span>연속 학습</span></div><div><b>${doneN} / ${LESSONS.length}</b><span>마친 레슨</span></div><div><b>${S.xp}</b><span>경험치</span></div></div>
-    <p class="note">배운 글자와 문장이 여기에 모입니다. 눌러서 다시 들어요.</p>`;
+    <div class="seg two">
+      <button class="${S.rec !== 'book' ? 'on' : ''}" data-rec="course">전체 과정</button>
+      <button class="${S.rec === 'book' ? 'on' : ''}" data-rec="book">배운 표현</button>
+    </div>`;
+  const bindRec = () => el.querySelectorAll('[data-rec]').forEach(b => b.onclick = () => { S.rec = b.dataset.rec; save(); renderHome(); });
+  if (S.rec !== 'book') {
+    el.innerHTML = html + courseHTML();
+    bindRec();
+    el.querySelectorAll('[data-track]').forEach(b => b.onclick = () => { S.track = b.dataset.track; save(); renderHome(); });
+    el.querySelectorAll('.node').forEach(b => b.onclick = () => startLesson(LESSONS.find(l => l.id === b.dataset.id)));
+    return;
+  }
+  html += `<p class="note">배운 글자와 문장이 여기에 모입니다. 눌러서 다시 들어요.</p>`;
   if (!kanaDone.length && !phDone.length) html += `<section class="panel center"><p>레슨을 마치면 배운 글자와 문장이 여기에 모여요.</p></section>`;
   if (kanaDone.length) {
     html += `<h3 class="unit">글자</h3><div class="kgrid">` +
@@ -724,6 +847,7 @@ function viewBook(el) {
     }).join('');
   });
   el.innerHTML = html;
+  bindRec();
   el.querySelectorAll('[data-say]').forEach(b => b.onclick = () => speak(b.dataset.say));
 }
 

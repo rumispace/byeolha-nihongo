@@ -348,8 +348,7 @@ function endDay() {
   const stars = Math.max(1, Math.round(avg));
   const gain = 15 + (s.misses.length === 0 ? 5 : 0);
   S.xp += gain;
-  const t = dayStr();
-  if (S.lastDay !== t) { S.streak = S.lastDay === dayStr(-1) ? S.streak + 1 : 1; S.lastDay = t; }
+  markStudied();
   S.shop = S.shop || { days: 0, total: 0, best: 0 };
   S.shop.days++; S.shop.total += s.sales; S.shop.best = Math.max(S.shop.best, s.sales);
   save();
